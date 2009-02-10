@@ -16,7 +16,7 @@ class Rubytter
 
   def get(path, params = {})
     path += '.json'
-    param_str = '?' + params.to_a.map{|i| i[0] + '=' + CGI.escape(i[1]) }.join('&')
+    param_str = '?' + params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1]) }.join('&')
     path = path + param_str unless param_str.empty?
 
     req = Net::HTTP::Get.new(path)
@@ -39,6 +39,8 @@ class Rubytter
       http.request(req, param_str).body
     end
   end
+
+  alias delete post
 
   %w(
     /statuses/user_timeline/%s
@@ -63,6 +65,17 @@ class Rubytter
     eval <<-EOS
       def #{method_name}(params = {})
         get('#{path}', params)
+      end
+    EOS
+  end
+
+  %w(
+    /statuses/destroy/%s
+  ).each do |path|
+    method_name = path.sub('/statuses/', '').sub('/%s', '')
+    eval <<-EOS
+      def #{method_name}(id, params = {})
+        delete('#{path}' % id, params)
       end
     EOS
   end
