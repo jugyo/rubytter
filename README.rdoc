@@ -1,0 +1,8 @@
+= rubytter
+
+http://github.com/jugyo/rubytter
+
+== DESCRIPTION:
+
+Rubytter is simple twitter client writen by ruby.
+
