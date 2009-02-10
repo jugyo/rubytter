@@ -8,7 +8,7 @@ Rubytter is simple twitter client writen by ruby.
 
 == FEATURES/PROBLEMS:
 
-implemented request:
+implemented methods:
 
 - /statuses/user_timeline/<id>
 - /statuses/show/<id>
@@ -31,6 +31,13 @@ TODO
 == INSTALL:
 
 TODO
+
+== TODO:
+
+- search
+- direct_message
+- follow/leave
+- favorite
 
 == LICENSE:
 
