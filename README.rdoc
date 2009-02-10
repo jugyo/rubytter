@@ -6,3 +6,18 @@ http://github.com/jugyo/rubytter
 
 Rubytter is simple twitter client writen by ruby.
 
+== FEATURES/PROBLEMS:
+
+implemented request:
+
+- /statuses/user_timeline/<id>
+- /statuses/show/<id>
+- /statuses/destroy/<id>
+- /statuses/friends/<id>
+- /statuses/followers/<id>
+- /statuses/public_timeline
+- /statuses/friends_timeline
+- /statuses/replies
+- /statuses/update
+
+== SYNOPSIS:
