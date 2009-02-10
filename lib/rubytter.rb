@@ -43,7 +43,6 @@ class Rubytter
   %w(
     /statuses/user_timeline/%s
     /statuses/show/%s
-    /statuses/destroy/%s
     /statuses/friends/%s
     /statuses/followers/%s
   ).each do |path|
