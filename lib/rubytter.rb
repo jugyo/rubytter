@@ -9,10 +9,57 @@ class Rubytter
   def initialize(login, password, options = {})
     @login = login
     @password = password
-    # TODO: for proxy
     @host = options[:host] || 'twitter.com'
     @connection = Connection.new(options)
   end
+
+  [
+    ['status_update',           '/statuses/update',             'post'],
+    ['destroy',                 '/statuses/destroy/%s',         'delete'],
+    ['public_timeline',         '/statuses/public_timeline'],
+    ['friends_timeline',        '/statuses/friends_timeline'],
+    ['replies',                 '/statuses/replies'],
+    ['user_timeline',           '/statuses/user_timeline/%s'],
+    ['show',                    '/statuses/show/%s'],
+    ['friends',                 '/statuses/friends/%s'],
+    ['followers',               '/statuses/followers/%s'],
+    ['user',                    '/users/show/%s'],
+    ['direct_messages',         '/direct_messages'],
+    ['sent_direct_messages',    '/direct_messages/sent'],
+    ['send_direct_message',     '/direct_messages/new',         'post'],
+    ['destroy_direct_message',  '/direct_messages/destroy/%s',  'delete'],
+    ['create_friendship',       '/friendships/create/%s',       'post'],
+    ['destroy_friendship',      '/friendships/destroy/%s',      'delete'],
+    ['friendship_exists',       '/friendships/exists'],
+    ['followers_ids',           '/followers/ids/%s'],
+    ['friends_ids',             '/friends/ids/%s'],
+  ].each do |array|
+    method, path, http_method = *array
+    http_method ||= 'get'
+    if /%s$/ =~ path
+      eval <<-EOS
+        def #{method}(id, params = {})
+          #{http_method}('#{path}' % id, params)
+        end
+      EOS
+    else
+      eval <<-EOS
+        def #{method}(params = {})
+          #{http_method}('#{path}', params)
+        end
+      EOS
+    end
+  end
+
+  def update(status, params = {})
+    status_update(params.merge({:status => status}))
+  end
+
+  def direct_message(user, text, params = {})
+    send_direct_message(params.merge({:user => user, :text => text}))
+  end
+
+  # TODO: define some alias for commonly　used　methods
 
   def get(path, params = {})
     path += '.json'
@@ -40,48 +87,8 @@ class Rubytter
     end
   end
 
-  alias delete post
-
-  %w(
-    /statuses/user_timeline/%s
-    /statuses/show/%s
-    /statuses/friends/%s
-    /statuses/followers/%s
-  ).each do |path|
-    method_name = path.sub('/statuses/', '').sub('/%s', '')
-    eval <<-EOS
-      def #{method_name}(id, params = {})
-        get('#{path}' % id, params)
-      end
-    EOS
-  end
-
-  %w(
-    /statuses/public_timeline
-    /statuses/friends_timeline
-    /statuses/replies
-  ).each do |path|
-    method_name = path.sub('/statuses/', '')
-    eval <<-EOS
-      def #{method_name}(params = {})
-        get('#{path}', params)
-      end
-    EOS
-  end
-
-  %w(
-    /statuses/destroy/%s
-  ).each do |path|
-    method_name = path.sub('/statuses/', '').sub('/%s', '')
-    eval <<-EOS
-      def #{method_name}(id, params = {})
-        delete('#{path}' % id, params)
-      end
-    EOS
-  end
-
-  def update(status, params = {})
-    post('/statuses/update', params.merge({:status => status}))
+  def delete(path, params = {})
+    post(path, params)
   end
 
   class Connection
