@@ -5,6 +5,16 @@ require 'cgi'
 
 require 'rubytter/connection'
 
+class Hash
+  def to_struct
+    struct_values = []
+    each do |k, v|
+      struct_values << (v.is_a?(Hash) ? v.to_struct : v)
+    end
+    Struct.new(*keys.map{|k|k.to_sym}).new(*struct_values)
+  end
+end
+
 class Rubytter
   APP_NAME = self.to_s
 
@@ -76,7 +86,21 @@ class Rubytter
     res_text = @connection.start(@host) do |http|
       http.request(req).body
     end
-    return JSON.parse(res_text)
+    json = JSON.parse(res_text)
+    return  case json
+            when Array
+              json.map do |i|
+                if i.is_a?(Hash)
+                  i.to_struct
+                else
+                  i
+                end
+              end
+            when Hash
+              json.to_struct
+            else
+              json
+            end
   end
 
   def post(path, params = {})
