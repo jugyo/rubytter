@@ -14,6 +14,7 @@ class Rubytter
   end
 
   def self.api_settings
+    # method name             path for API                 http method
     "
       status_update           /statuses/update             post
       destroy                 /statuses/destroy/%s         delete
