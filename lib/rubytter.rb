@@ -95,6 +95,6 @@ class Rubytter
   def prepare_request(req)
     req.add_field('User-Agent', 'Rubytter http://github.com/jugyo/rubytter')
     req.basic_auth(@login, @password)
-    req
+    return req
   end
 end

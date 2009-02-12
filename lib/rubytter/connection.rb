@@ -13,7 +13,7 @@ class Rubytter
       if @proxy_host
         @http_class = Net::HTTP::Proxy(@proxy_host, @proxy_port,
                                        @proxy_user, @proxy_password)
-        @proxy_uri =  "http://" + @proxy_host + ":" + @proxy_port + "/"
+        @proxy_uri =  "http://" + @proxy_host + ":" + @proxy_port.to_s + "/"
       else
         @http_class = Net::HTTP
       end
