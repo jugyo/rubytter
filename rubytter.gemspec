@@ -3,10 +3,11 @@ Gem::Specification.new do |s|
   s.version = '0.2.0'
   s.summary = "Simple twitter client."
   s.description = "Rubytter is a simple twitter client."
-  s.files = Dir["{lib}/**/*"].to_a +
-            Dir["{examples}/**/*"].to_a +
-            Dir["{spec}/**/*"].to_a +
-            ["README.rdoc", "History.txt"]
+  s.files = %w( lib/rubytter.rb
+                spec/rubytter_spec.rb
+                spec/spec_helper.rb
+                README.rdoc
+                History.txt )
   s.add_dependency("json", ">= 1.1.3")
   s.author = 'jugyo'
   s.email = 'jugyo.org@gmail.com'
