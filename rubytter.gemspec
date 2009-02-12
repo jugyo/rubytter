@@ -4,6 +4,9 @@ Gem::Specification.new do |s|
   s.summary = "Simple twitter client."
   s.description = "Rubytter is a simple twitter client."
   s.files = %w( lib/rubytter.rb
+                lib/rubytter/connection.rb
+                examples/friends_timeline.rb
+                examples/update_status.rb
                 spec/rubytter_spec.rb
                 spec/spec_helper.rb
                 README.rdoc
