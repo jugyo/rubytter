@@ -10,15 +10,25 @@ Rubytter is simple twitter library.
 
 implemented methods:
 
-- /statuses/user_timeline/<id>
-- /statuses/show/<id>
-- /statuses/destroy/<id>
-- /statuses/friends/<id>
-- /statuses/followers/<id>
-- /statuses/public_timeline
+- /direct_messages
+- /direct_messages/destroy/id
+- /direct_messages/new
+- /direct_messages/sent
+- /followers/ids/id
+- /friends/ids/id
+- /friendships/create/id
+- /friendships/destroy/id
+- /friendships/exists
+- /statuses/destroy/id
+- /statuses/followers/id
+- /statuses/friends/id
 - /statuses/friends_timeline
+- /statuses/public_timeline
 - /statuses/replies
+- /statuses/show/id
 - /statuses/update
+- /statuses/user_timeline/id
+- /users/show/id
 
 == SYNOPSIS:
 
