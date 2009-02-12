@@ -7,7 +7,8 @@ require 'rubytter/connection'
 require 'rubytter/hash_extension'
 
 class Rubytter
-  APP_NAME = self.to_s
+  APP_NAME = 'Rubytter'
+  HOMEPAGE = 'http://github.com/jugyo/rubytter'
 
   def initialize(login, password, options = {})
     @login = login
@@ -67,49 +68,49 @@ class Rubytter
     send_direct_message(params.merge({:user => user, :text => text}))
   end
 
-  # TODO: define some alias for commonly　used　methods
-
   def get(path, params = {})
     path += '.json'
     param_str = '?' + params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1]) }.join('&')
     path = path + param_str unless param_str.empty?
     req = prepare_request(Net::HTTP::Get.new(path))
-    res_text = @connection.start(@host) do |http|
+    res_body = @connection.start(@host) do |http|
       http.request(req).body
     end
-    json = JSON.parse(res_text)
-    return  case json
-            when Array
-              json.map do |i|
-                if i.is_a?(Hash)
-                  i.to_struct
-                else
-                  i
-                end
-              end
-            when Hash
-              json.to_struct
-            else
-              json
-            end
+    json_to_struct(JSON.parse(res_body))
   end
 
   def post(path, params = {})
     path += '.json'
     param_str = params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1]) }.join('&')
     req = prepare_request(Net::HTTP::Post.new(path))
-    @connection.start(@host) do |http|
+    res_body = @connection.start(@host) do |http|
       http.request(req, param_str).body
     end
+    json_to_struct(JSON.parse(res_body))
   end
 
-  def delete(path, params = {})
-    post(path, params)
-  end
+  alias delete post
 
   def prepare_request(req)
-    req.add_field('User-Agent', 'Rubytter http://github.com/jugyo/rubytter')
+    req.add_field('User-Agent', "#{APP_NAME} #{HOMEPAGE}")
     req.basic_auth(@login, @password)
     return req
+  end
+
+  def json_to_struct(json)
+    case json
+    when Array
+      json.map do |i|
+        if i.is_a?(Hash)
+          i.to_struct
+        else
+          i
+        end
+      end
+    when Hash
+      json.to_struct
+    else
+      json
+    end
   end
 end
