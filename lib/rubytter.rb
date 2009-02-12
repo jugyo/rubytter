@@ -13,27 +13,31 @@ class Rubytter
     @connection = Connection.new(options)
   end
 
-  [
-    ['status_update',           '/statuses/update',             'post'],
-    ['destroy',                 '/statuses/destroy/%s',         'delete'],
-    ['public_timeline',         '/statuses/public_timeline'],
-    ['friends_timeline',        '/statuses/friends_timeline'],
-    ['replies',                 '/statuses/replies'],
-    ['user_timeline',           '/statuses/user_timeline/%s'],
-    ['show',                    '/statuses/show/%s'],
-    ['friends',                 '/statuses/friends/%s'],
-    ['followers',               '/statuses/followers/%s'],
-    ['user',                    '/users/show/%s'],
-    ['direct_messages',         '/direct_messages'],
-    ['sent_direct_messages',    '/direct_messages/sent'],
-    ['send_direct_message',     '/direct_messages/new',         'post'],
-    ['destroy_direct_message',  '/direct_messages/destroy/%s',  'delete'],
-    ['create_friendship',       '/friendships/create/%s',       'post'],
-    ['destroy_friendship',      '/friendships/destroy/%s',      'delete'],
-    ['friendship_exists',       '/friendships/exists'],
-    ['followers_ids',           '/followers/ids/%s'],
-    ['friends_ids',             '/friends/ids/%s'],
-  ].each do |array|
+  def self.api_settings
+    "
+      status_update           /statuses/update             post
+      destroy                 /statuses/destroy/%s         delete
+      public_timeline         /statuses/public_timeline
+      friends_timeline        /statuses/friends_timeline
+      replies                 /statuses/replies
+      user_timeline           /statuses/user_timeline/%s
+      show                    /statuses/show/%s
+      friends                 /statuses/friends/%s
+      followers               /statuses/followers/%s
+      user                    /users/show/%s
+      direct_messages         /direct_messages
+      sent_direct_messages    /direct_messages/sent
+      send_direct_message     /direct_messages/new         post
+      destroy_direct_message  /direct_messages/destroy/%s  delete
+      create_friendship       /friendships/create/%s       post
+      destroy_friendship      /friendships/destroy/%s      delete
+      friendship_exists       /friendships/exists
+      followers_ids           /followers/ids/%s
+      friends_ids             /friends/ids/%s
+    ".strip.split("\n").map{|line| line.strip.split(/\s+/)}
+  end
+
+  api_settings.each do |array|
     method, path, http_method = *array
     http_method ||= 'get'
     if /%s$/ =~ path
