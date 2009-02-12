@@ -72,7 +72,7 @@ class Rubytter
     path += '.json'
     param_str = '?' + params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1]) }.join('&')
     path = path + param_str unless param_str.empty?
-    prepare_request(Net::HTTP::Get.new(path))
+    req = prepare_request(Net::HTTP::Get.new(path))
     res_text = @connection.start(@host) do |http|
       http.request(req).body
     end
@@ -82,7 +82,7 @@ class Rubytter
   def post(path, params = {})
     path += '.json'
     param_str = params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1]) }.join('&')
-    prepare_request(Net::HTTP::Post.new(path))
+    req = prepare_request(Net::HTTP::Post.new(path))
     @connection.start(@host) do |http|
       http.request(req, param_str).body
     end
@@ -95,5 +95,6 @@ class Rubytter
   def prepare_request(req)
     req.add_field('User-Agent', 'Rubytter http://github.com/jugyo/rubytter')
     req.basic_auth(@login, @password)
+    req
   end
 end
