@@ -4,16 +4,7 @@ require 'net/https'
 require 'cgi'
 
 require 'rubytter/connection'
-
-class Hash
-  def to_struct
-    struct_values = []
-    each do |k, v|
-      struct_values << (v.is_a?(Hash) ? v.to_struct : v)
-    end
-    Struct.new(*keys.map{|k|k.to_sym}).new(*struct_values)
-  end
-end
+require 'rubytter/hash_extension'
 
 class Rubytter
   APP_NAME = self.to_s

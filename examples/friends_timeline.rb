@@ -10,5 +10,5 @@ end
 
 client = Rubytter.new(ARGV[0], ARGV[1])
 client.friends_timeline().each do |status|
-  puts "#{status['user']['screen_name']}: #{status['text']}"
+  puts "#{status.user.screen_name}: #{status.text}"
 end
