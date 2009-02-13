@@ -4,7 +4,6 @@ require 'net/https'
 require 'cgi'
 
 require 'rubytter/connection'
-require 'rubytter/hash_extension'
 
 class Rubytter
   APP_NAME = 'Rubytter'
@@ -18,10 +17,10 @@ class Rubytter
   end
 
   def self.api_settings
-    # method name             path for API                 http method
+    # method name             path for API                    http method
     "
-      status_update           /statuses/update             post
-      destroy                 /statuses/destroy/%s         delete
+      status_update           /statuses/update                post
+      destroy                 /statuses/destroy/%s            delete
       public_timeline         /statuses/public_timeline
       friends_timeline        /statuses/friends_timeline
       replies                 /statuses/replies
@@ -32,13 +31,22 @@ class Rubytter
       user                    /users/show/%s
       direct_messages         /direct_messages
       sent_direct_messages    /direct_messages/sent
-      send_direct_message     /direct_messages/new         post
-      destroy_direct_message  /direct_messages/destroy/%s  delete
-      create_friendship       /friendships/create/%s       post
-      destroy_friendship      /friendships/destroy/%s      delete
+      send_direct_message     /direct_messages/new            post
+      destroy_direct_message  /direct_messages/destroy/%s     delete
+      create_friendship       /friendships/create/%s          post
+      destroy_friendship      /friendships/destroy/%s         delete
       friendship_exists       /friendships/exists
       followers_ids           /followers/ids/%s
       friends_ids             /friends/ids/%s
+      favorites               /favorites
+      favorite                /favorites/create/%s            post
+      unfavorite              /favorites/destroy/%s           delete
+      verify_credentials      /account/verify_credentials     get
+      end_session             /account/end_session            post
+      update_delivery_device  /account/update_delivery_device post
+      update_profile_colors   /account/update_profile_colors  post
+      rate_limit_status       /account/rate_limit_status
+      update_profile          /account/update_profile         post
     ".strip.split("\n").map{|line| line.strip.split(/\s+/)}
   end
 
