@@ -40,7 +40,7 @@ update status
 get friends timeline
 
  client = Rubytter.new(user_id, password)
- client.friends_timeline().each do |status|
+ client.friends_timeline.each do |status|
    puts "#{status.user.screen_name}: #{status.text}"
  end
 
@@ -56,8 +56,6 @@ get friends timeline
 == TODO:
 
 - search
-- direct_message
-- follow/leave
 - favorite
 
 == LICENSE:
