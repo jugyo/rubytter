@@ -104,5 +104,29 @@ class Rubytter
       @rubytter.followers_ids('test')
     end
 
+    it 'should create struct from json' do
+      hash = {
+        :a => 'a',
+        'b' => 1,
+        1 => 'a',
+        /regex/ => 'regex',
+        nil => nil,
+        :c => {:a => 1, :b => 2},
+        :d => {:a => {:a => 1, :b => 2}, :b => 1},
+        :e => [{:a => 1, :b => 2}, {:c => 3}]
+      }
+      struct = @rubytter.json_to_struct(hash)
+      struct.a.should == 'a'
+      struct.b.should == 1
+      struct.c.a.should == 1
+      struct.c.b.should == 2
+      struct.d.a.a.should == 1
+      struct.e[0].a.should == 1
+      struct.e[0].b.should == 2
+      struct.e[1].c.should == 3
+      lambda {struct.x}.should raise_error(NoMethodError)
+      lambda {struct.regex}.should raise_error(NoMethodError)
+    end
+
   end
 end

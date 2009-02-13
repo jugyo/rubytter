@@ -100,15 +100,20 @@ class Rubytter
   def json_to_struct(json)
     case json
     when Array
-      json.map do |i|
-        if i.is_a?(Hash)
-          i.to_struct
-        else
-          i
+      json.map{|i| json_to_struct(i)}
+    when Hash
+      struct_values = {}
+      json.each do |k, v|
+        case k
+        when String, Symbol
+          struct_values[k.to_sym] = json_to_struct(v)
         end
       end
-    when Hash
-      json.to_struct
+      unless struct_values.empty?
+        Struct.new(*struct_values.keys).new(*struct_values.values)
+      else
+        nil
+      end
     else
       json
     end
