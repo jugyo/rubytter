@@ -6,6 +6,9 @@ require 'cgi'
 require 'rubytter/connection'
 
 class Rubytter
+
+  class APIError < StandardError; end
+
   APP_NAME = 'Rubytter'
   VERSION = '0.4.0'
   HOMEPAGE = 'http://github.com/jugyo/rubytter'
@@ -85,26 +88,33 @@ class Rubytter
     path += '.json'
     param_str = '?' + params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
     path = path + param_str unless param_str.empty?
-    req = prepare_request(Net::HTTP::Get.new(path))
-    res_body = @connection.start(@host) do |http|
-      http.request(req).body
-    end
-    json_to_struct(JSON.parse(res_body))
+    req = create_request(Net::HTTP::Get.new(path))
+    http_request(req)
   end
 
   def post(path, params = {})
     path += '.json'
     param_str = params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
-    req = prepare_request(Net::HTTP::Post.new(path))
-    res_body = @connection.start(@host) do |http|
-      http.request(req, param_str).body
-    end
-    json_to_struct(JSON.parse(res_body))
+    req = create_request(Net::HTTP::Post.new(path))
+    http_request(req)
   end
 
   alias delete post
 
-  def prepare_request(req)
+  def http_request(req)
+    res = @connection.start(@host) do |http|
+      http.request(req)
+    end
+    struct = json_to_struct(JSON.parse(res.body))
+    case res.code
+    when "200"
+      struct
+    else
+      raise APIError, struct.error
+    end
+  end
+
+  def create_request(req)
     req.add_field('User-Agent', "#{APP_NAME} #{HOMEPAGE}")
     req.basic_auth(@login, @password)
     return req

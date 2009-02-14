@@ -8,7 +8,7 @@ Rubytter is simple twitter library.
 
 == FEATURES/PROBLEMS:
 
-implemented methods:
+implemented API methods:
 
 - /statuses/update
 - /statuses/destroy/id
@@ -73,7 +73,6 @@ or
 == TODO:
 
 - search
-- favorite
 
 == LICENSE:
 
