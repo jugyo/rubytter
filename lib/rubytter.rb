@@ -82,6 +82,7 @@ class Rubytter
 
   alias leave remove_follow
   alias profile user
+  alias limit_status rate_limit_status
 
   def get(path, params = {})
     path += '.json'
