@@ -34,7 +34,7 @@ class Rubytter
       send_direct_message     /direct_messages/new            post
       remove_direct_message   /direct_messages/destroy/%s     delete
       follow                  /friendships/create/%s          post
-      remove_follow           /friendships/destroy/%s         delete
+      leave                   /friendships/destroy/%s         delete
       friendship_exists       /friendships/exists
       followers_ids           /followers/ids/%s
       friends_ids             /friends/ids/%s
@@ -45,7 +45,7 @@ class Rubytter
       end_session             /account/end_session            post
       update_delivery_device  /account/update_delivery_device post
       update_profile_colors   /account/update_profile_colors  post
-      rate_limit_status       /account/rate_limit_status
+      limit_status            /account/rate_limit_status
       update_profile          /account/update_profile         post
       enable_notification     /notifications/follow/%s        post
       disable_notification    /notifications/leave/%s         post
@@ -79,10 +79,6 @@ class Rubytter
   def direct_message(user, text, params = {})
     send_direct_message(params.merge({:user => user, :text => text}))
   end
-
-  alias leave remove_follow
-  alias profile user
-  alias limit_status rate_limit_status
 
   def get(path, params = {})
     path += '.json'
