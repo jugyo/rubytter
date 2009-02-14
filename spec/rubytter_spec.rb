@@ -77,14 +77,14 @@ class Rubytter
 
     # friendship
 
-    it 'should respond to create_friendship' do
+    it 'should respond to follow' do
       @rubytter.should_receive(:post).with('/friendships/create/test', {})
       @rubytter.follow('test')
     end
 
-    it 'should respond to destroy_friendship' do
+    it 'should respond to leave' do
       @rubytter.should_receive(:delete).with('/friendships/destroy/test', {})
-      @rubytter.remove_follow('test')
+      @rubytter.leave('test')
     end
 
     it 'should respond to friendship_exists' do
