@@ -7,6 +7,7 @@ require 'rubytter/connection'
 
 class Rubytter
   APP_NAME = 'Rubytter'
+  VERSION = '0.4.0'
   HOMEPAGE = 'http://github.com/jugyo/rubytter'
 
   def initialize(login, password, options = {})
