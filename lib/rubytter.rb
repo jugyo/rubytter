@@ -47,6 +47,10 @@ class Rubytter
       update_profile_colors   /account/update_profile_colors  post
       rate_limit_status       /account/rate_limit_status
       update_profile          /account/update_profile         post
+      enable_notification     /notifications/follow/%s        post
+      disable_notification    /notifications/leave/%s         post
+      block                   /blocks/create/%s               post
+      unblock                 /blocks/destroy/%s              delete
     ".strip.split("\n").map{|line| line.strip.split(/\s+/)}
   end
 
