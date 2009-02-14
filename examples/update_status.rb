@@ -9,4 +9,4 @@ if ARGV.size < 3
 end
 
 client = Rubytter.new(ARGV[0], ARGV[1])
-client.update(ARGV[2])
+p client.update(ARGV[2])
