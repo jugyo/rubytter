@@ -33,7 +33,7 @@ class Rubytter
       @rubytter.user(1)
 
       @rubytter.should_receive(:delete).with('/statuses/destroy/1', {})
-      @rubytter.destroy(1)
+      @rubytter.remove_status(1)
     end
 
     # direct_messages
@@ -55,7 +55,7 @@ class Rubytter
 
     it 'should respond to destroy_direct_message' do
       @rubytter.should_receive(:delete).with('/direct_messages/destroy/1', {})
-      @rubytter.destroy_direct_message(1)
+      @rubytter.remove_direct_message(1)
     end
 
     it 'should respond to direct_message' do
@@ -70,21 +70,21 @@ class Rubytter
       @rubytter.update('test')
     end
 
-    it 'should respond to status_update' do
+    it 'should respond to update_status' do
       @rubytter.should_receive(:post).with('/statuses/update', {:status => 'test'})
-      @rubytter.status_update(:status => 'test')
+      @rubytter.update_status(:status => 'test')
     end
 
     # friendship
 
     it 'should respond to create_friendship' do
       @rubytter.should_receive(:post).with('/friendships/create/test', {})
-      @rubytter.create_friendship('test')
+      @rubytter.follow('test')
     end
 
     it 'should respond to destroy_friendship' do
       @rubytter.should_receive(:delete).with('/friendships/destroy/test', {})
-      @rubytter.destroy_friendship('test')
+      @rubytter.remove_follow('test')
     end
 
     it 'should respond to friendship_exists' do

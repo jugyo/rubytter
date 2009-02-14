@@ -19,8 +19,8 @@ class Rubytter
   def self.api_settings
     # method name             path for API                    http method
     "
-      status_update           /statuses/update                post
-      destroy                 /statuses/destroy/%s            delete
+      update_status           /statuses/update                post
+      remove_status           /statuses/destroy/%s            delete
       public_timeline         /statuses/public_timeline
       friends_timeline        /statuses/friends_timeline
       replies                 /statuses/replies
@@ -32,15 +32,15 @@ class Rubytter
       direct_messages         /direct_messages
       sent_direct_messages    /direct_messages/sent
       send_direct_message     /direct_messages/new            post
-      destroy_direct_message  /direct_messages/destroy/%s     delete
-      create_friendship       /friendships/create/%s          post
-      destroy_friendship      /friendships/destroy/%s         delete
+      remove_direct_message   /direct_messages/destroy/%s     delete
+      follow                  /friendships/create/%s          post
+      remove_follow           /friendships/destroy/%s         delete
       friendship_exists       /friendships/exists
       followers_ids           /followers/ids/%s
       friends_ids             /friends/ids/%s
       favorites               /favorites
       favorite                /favorites/create/%s            post
-      unfavorite              /favorites/destroy/%s           delete
+      remove_favorite         /favorites/destroy/%s           delete
       verify_credentials      /account/verify_credentials     get
       end_session             /account/end_session            post
       update_delivery_device  /account/update_delivery_device post
@@ -73,12 +73,15 @@ class Rubytter
   end
 
   def update(status, params = {})
-    status_update(params.merge({:status => status}))
+    update_status(params.merge({:status => status}))
   end
 
   def direct_message(user, text, params = {})
     send_direct_message(params.merge({:user => user, :text => text}))
   end
+
+  alias leave remove_follow
+  alias profile user
 
   def get(path, params = {})
     path += '.json'
