@@ -82,7 +82,7 @@ class Rubytter
 
   def get(path, params = {})
     path += '.json'
-    param_str = '?' + params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1]) }.join('&')
+    param_str = '?' + params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
     path = path + param_str unless param_str.empty?
     req = prepare_request(Net::HTTP::Get.new(path))
     res_body = @connection.start(@host) do |http|
@@ -93,7 +93,7 @@ class Rubytter
 
   def post(path, params = {})
     path += '.json'
-    param_str = params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1]) }.join('&')
+    param_str = params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
     req = prepare_request(Net::HTTP::Post.new(path))
     res_body = @connection.start(@host) do |http|
       http.request(req, param_str).body
