@@ -1,16 +1,14 @@
 Gem::Specification.new do |s|
   s.name = 'rubytter'
-  s.version = '0.3.5'
+  s.version = '0.4.0'
   s.summary = "Simple twitter client."
   s.description = "Rubytter is a simple twitter client."
-  s.files = %w( lib/rubytter.rb
-                lib/rubytter/connection.rb
-                examples/friends_timeline.rb
-                examples/update_status.rb
-                spec/rubytter_spec.rb
-                spec/spec_helper.rb
+  s.files = %w( lib/rubytter/connection.rb lib/rubytter.rb
+                spec/rubytter_spec.rb spec/spec_helper.rb
+                examples/direct_message.rb examples/favorite.rb examples/follow.rb examples/friends_timeline.rb examples/limit.rb examples/replies.rb examples/update_status.rb examples/user.rb
                 README.rdoc
-                History.txt )
+                History.txt
+                Rakefile )
   s.add_dependency("json_pure", ">= 1.1.3")
   s.author = 'jugyo'
   s.email = 'jugyo.org@gmail.com'
