@@ -1,6 +1,6 @@
 = rubytter
 
-http://github.com/jugyo/rubytter
+http://wiki.github.com/jugyo/rubytter
 
 == DESCRIPTION:
 
