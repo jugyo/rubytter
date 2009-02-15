@@ -42,6 +42,7 @@ implemented API methods:
 - /notifications/leave/id
 - /blocks/create/id
 - /blocks/destroy/id
+- (search.twitter.com)/search
 
 == SYNOPSIS:
 
