@@ -84,6 +84,13 @@ class Rubytter
     send_direct_message(params.merge({:user => user, :text => text}))
   end
 
+  def search(query = '', params = {})
+    params = params.merge({:q => query}) unless query.empty?
+    path = '/search.json?' + to_param_str(params)
+    req = create_request(Net::HTTP::Post.new(path))
+    http_request(req, nil, "search.#{@host}")
+  end
+
   def get(path, params = {})
     path += '.json'
     param_str = '?' + to_param_str(params)
