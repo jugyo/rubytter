@@ -64,13 +64,13 @@ class Rubytter
     if /%s$/ =~ path
       eval <<-EOS
         def #{method}(id, params = {})
-          #{http_method}('#{path}' % id, params)
+          #{http_method}(@host, '#{path}' % id, params)
         end
       EOS
     else
       eval <<-EOS
         def #{method}(params = {})
-          #{http_method}('#{path}', params)
+          #{http_method}(@host, '#{path}', params)
         end
       EOS
     end
@@ -91,34 +91,29 @@ class Rubytter
               when Hash
                 arg
               end
-    get_from_search_api('/search', params)
+    get("search.#{@host}", '/search', params)
   end
 
-  def get(path, params = {})
+  def get(host, path, params = {})
+    host ||= @host
     path += '.json'
     param_str = '?' + to_param_str(params)
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path))
-    http_request(req)
+    http_request(host, req)
   end
 
-  def post(path, params = {})
+  def post(host, path, params = {})
+    host ||= @host
     path += '.json'
     param_str = to_param_str(params)
     req = create_request(Net::HTTP::Post.new(path))
-    http_request(req, param_str)
+    http_request(host, req, param_str)
   end
 
   alias delete post
 
-  def get_from_search_api(path, params)
-    path = path + '.json?' + to_param_str(params)
-    req = create_request(Net::HTTP::Post.new(path))
-    http_request(req, nil, "search.#{@host}")
-  end
-
-  def http_request(req, param_str = nil, host = nil)
-    host ||= @host
+  def http_request(host, req, param_str = nil)
     res = @connection.start(host) do |http|
       if param_str
         http.request(req, param_str)
@@ -164,6 +159,7 @@ class Rubytter
   end
 
   def to_param_str(hash)
+    raise ArgumentError, 'Argument must be a Hash object' unless hash.is_a?(Hash)
     hash.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
   end
 end
