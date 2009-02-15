@@ -60,6 +60,10 @@ get friends timeline
 
 == REQUIREMENTS:
 
+* json_pure
+
+or
+
 * json
 
 == INSTALL:
