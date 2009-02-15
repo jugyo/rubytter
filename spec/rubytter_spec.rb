@@ -110,8 +110,18 @@ class Rubytter
     end
 
     it 'should respond to search' do
-      @rubytter.should_receive(:http_request) {|req, param_str, host| host.should == 'search.twitter.com'}
+      @rubytter.should_receive(:http_request) do |req, param_str, host|
+        req.path.should == '/search.json?q=test'
+        host.should == 'search.twitter.com'
+      end
       @rubytter.search('test')
+    end
+
+    it 'should respond to search with params' do
+      @rubytter.should_receive(:http_request) do |req, param_str, host|
+        req.path.should == '/search.json?lang=ja&q=test'
+      end
+      @rubytter.search(:q => 'test', :lang => 'ja')
     end
 
     it 'should respond to to_param_str' do
