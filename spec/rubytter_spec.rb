@@ -109,6 +109,15 @@ class Rubytter
       @rubytter.update_status(:status => 'test')
     end
 
+    it 'should respond to search' do
+      @rubytter.should_receive(:http_request) {|req, param_str, host| host.should == 'search.twitter.com'}
+      @rubytter.search('test')
+    end
+
+    it 'should respond to to_param_str' do
+      @rubytter.to_param_str(:page => 2, :foo => 'bar').should == 'foo=bar&page=2'
+    end
+
     it 'should create struct from json' do
       hash = {
         :a => 'a',
