@@ -10,7 +10,7 @@ class Rubytter
   class APIError < StandardError; end
 
   APP_NAME = 'Rubytter'
-  VERSION = '0.4.3'
+  VERSION = '0.4.4'
   HOMEPAGE = 'http://github.com/jugyo/rubytter'
 
   def initialize(login, password, options = {})
