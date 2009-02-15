@@ -91,9 +91,7 @@ class Rubytter
               when Hash
                 arg
               end
-    path = '/search.json?' + to_param_str(params)
-    req = create_request(Net::HTTP::Post.new(path))
-    http_request(req, nil, "search.#{@host}")
+    get_from_search_api('/search', params)
   end
 
   def get(path, params = {})
@@ -112,6 +110,12 @@ class Rubytter
   end
 
   alias delete post
+
+  def get_from_search_api(path, params)
+    path = path + '.json?' + to_param_str(params)
+    req = create_request(Net::HTTP::Post.new(path))
+    http_request(req, nil, "search.#{@host}")
+  end
 
   def http_request(req, param_str = nil, host = nil)
     host ||= @host

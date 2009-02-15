@@ -109,7 +109,12 @@ class Rubytter
       @rubytter.update_status(:status => 'test')
     end
 
-    it 'should respond to search' do
+    it 'should respond to search (1)' do
+      @rubytter.should_receive(:get_from_search_api).with('/search', {:q => 'test'})
+      @rubytter.search('test')
+    end
+
+    it 'should respond to search (2)' do
       @rubytter.should_receive(:http_request) do |req, param_str, host|
         req.path.should == '/search.json?q=test'
         host.should == 'search.twitter.com'
@@ -117,9 +122,14 @@ class Rubytter
       @rubytter.search('test')
     end
 
-    it 'should respond to search with params' do
+    it 'should respond to search with params (1)' do
+      @rubytter.should_receive(:get_from_search_api).with("/search", {:q=>"test", :lang=>"ja"})
+      @rubytter.search(:q => 'test', :lang => 'ja')
+    end
+
+    it 'should respond to search with params (2)' do
       @rubytter.should_receive(:http_request) do |req, param_str, host|
-        req.path.should == '/search.json?lang=ja&q=test'
+        req.path.should == '/search.json?q=test&lang=ja'
       end
       @rubytter.search(:q => 'test', :lang => 'ja')
     end
