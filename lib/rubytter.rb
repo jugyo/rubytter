@@ -86,7 +86,7 @@ class Rubytter
 
   def get(path, params = {})
     path += '.json'
-    param_str = '?' + params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
+    param_str = '?' + to_param_str(params)
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path))
     http_request(req)
@@ -94,16 +94,21 @@ class Rubytter
 
   def post(path, params = {})
     path += '.json'
-    param_str = params.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
+    param_str = to_param_str(params)
     req = create_request(Net::HTTP::Post.new(path))
-    http_request(req)
+    http_request(req, param_str)
   end
 
   alias delete post
 
-  def http_request(req)
-    res = @connection.start(@host) do |http|
-      http.request(req)
+  def http_request(req, param_str = nil, host = nil)
+    host ||= @host
+    res = @connection.start(host) do |http|
+      if param_str
+        http.request(req, param_str)
+      else
+        http.request(req)
+      end
     end
     struct = json_to_struct(JSON.parse(res.body))
     case res.code
@@ -117,7 +122,7 @@ class Rubytter
   def create_request(req)
     req.add_field('User-Agent', "#{APP_NAME} #{HOMEPAGE}")
     req.basic_auth(@login, @password)
-    return req
+    req
   end
 
   def json_to_struct(json)
@@ -140,5 +145,9 @@ class Rubytter
     else
       json
     end
+  end
+
+  def to_param_str(hash)
+    hash.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
   end
 end
