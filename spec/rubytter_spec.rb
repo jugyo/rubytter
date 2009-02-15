@@ -104,6 +104,11 @@ class Rubytter
       @rubytter.followers_ids('test')
     end
 
+    it 'should respond to http_request' do
+      @rubytter.should_receive(:http_request) {|req, param_str| param_str.should == 'status=test'}
+      @rubytter.update_status(:status => 'test')
+    end
+
     it 'should create struct from json' do
       hash = {
         :a => 'a',
