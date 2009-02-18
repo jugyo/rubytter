@@ -46,14 +46,16 @@ implemented API methods:
 
 == SYNOPSIS:
 
-update status
+initialize:
 
  client = Rubytter.new(user_id, password)
+
+update status:
+
  client.update('hello twitter!!')
 
-get friends timeline
+get friends timeline:
 
- client = Rubytter.new(user_id, password)
  client.friends_timeline.each do |status|
    puts "#{status.user.screen_name}: #{status.text}"
  end
@@ -74,10 +76,6 @@ or
 
  gem source -a http://gems.github.com
  sudo gem install jugyo-rubytter
-
-== TODO:
-
-- search
 
 == LICENSE:
 
