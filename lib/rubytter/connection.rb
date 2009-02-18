@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class Rubytter
   class Connection
     attr_reader :protocol, :port, :proxy_uri
