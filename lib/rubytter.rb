@@ -13,10 +13,14 @@ class Rubytter
   VERSION = '0.4.5'
   HOMEPAGE = 'http://github.com/jugyo/rubytter'
 
+  attr_reader :login
+  attr_accessor :host, :header
+
   def initialize(login, password, options = {})
     @login = login
     @password = password
     @host = options[:host] || 'twitter.com'
+    @header = options[:header] || {'User-Agent', "#{APP_NAME} #{HOMEPAGE}"}
     @connection = Connection.new(options)
   end
 
@@ -131,7 +135,7 @@ class Rubytter
   end
 
   def create_request(req)
-    req.add_field('User-Agent', "#{APP_NAME} #{HOMEPAGE}")
+    @header.each {|k, v| req.add_field(k, v) }
     req.basic_auth(@login, @password)
     req
   end
