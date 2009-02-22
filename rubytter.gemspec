@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'rubytter'
-  s.version = '0.4.5'
+  s.version = '0.4.6'
   s.summary = "Simple twitter client."
   s.description = "Rubytter is a simple twitter client."
   s.files = %w( lib/rubytter/connection.rb lib/rubytter.rb

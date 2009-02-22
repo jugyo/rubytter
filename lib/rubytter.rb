@@ -10,7 +10,7 @@ class Rubytter
   class APIError < StandardError; end
 
   APP_NAME = 'Rubytter'
-  VERSION = '0.4.5'
+  VERSION = '0.4.6'
   HOMEPAGE = 'http://github.com/jugyo/rubytter'
 
   attr_reader :login
