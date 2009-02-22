@@ -20,7 +20,7 @@ class Rubytter
     @login = login
     @password = password
     @host = options[:host] || 'twitter.com'
-    @header = options[:header] || {'User-Agent', "#{APP_NAME} #{HOMEPAGE}"}
+    @header = options[:header] || {'User-Agent', "#{APP_NAME}/#{VERSION} (#{HOMEPAGE})"}
     @connection = Connection.new(options)
   end
 
