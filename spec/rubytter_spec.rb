@@ -150,6 +150,11 @@ class Rubytter
       lambda { @rubytter.to_param_str(:bar) }.should raise_error ArgumentError
     end
 
+    it 'should set default header' do
+      rubytter = Rubytter.new('test', 'test')
+      rubytter.header.should == {'User-Agent', "#{APP_NAME}/#{VERSION} (#{HOMEPAGE})"}
+    end
+
     it 'should able to set custom header' do
       rubytter = Rubytter.new('test', 'test',
         {
