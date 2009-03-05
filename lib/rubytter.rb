@@ -68,13 +68,13 @@ class Rubytter
     if /%s$/ =~ path
       eval <<-EOS
         def #{method}(id, params = {})
-          #{http_method}(@host, '#{path}' % id, params)
+          #{http_method}('#{path}' % id, params)
         end
       EOS
     else
       eval <<-EOS
         def #{method}(params = {})
-          #{http_method}(@host, '#{path}', params)
+          #{http_method}('#{path}', params)
         end
       EOS
     end
@@ -88,31 +88,27 @@ class Rubytter
     send_direct_message(params.merge({:user => user, :text => text}))
   end
 
-  def search(arg)
-    params =  case arg
-              when String
-                {:q => arg}
-              when Hash
-                arg
-              end
-    get("search.#{@host}", '/search', params)
+  def search(query, params = {})
+    path = '/search.json'
+    param_str = '?' + to_param_str(params.merge({:q => query}))
+    path = path + param_str unless param_str.empty?
+    req = create_request(Net::HTTP::Get.new(path), false)
+    http_request("search.#{@host}", req)
   end
 
-  def get(host, path, params = {})
-    host ||= @host
+  def get(path, params = {})
     path += '.json'
     param_str = '?' + to_param_str(params)
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path))
-    http_request(host, req)
+    http_request(@host, req)
   end
 
-  def post(host, path, params = {})
-    host ||= @host
+  def post(path, params = {})
     path += '.json'
     param_str = to_param_str(params)
     req = create_request(Net::HTTP::Post.new(path))
-    http_request(host, req, param_str)
+    http_request(@host, req, param_str)
   end
 
   alias delete post
@@ -134,9 +130,9 @@ class Rubytter
     end
   end
 
-  def create_request(req)
+  def create_request(req, basic_auth = true)
     @header.each {|k, v| req.add_field(k, v) }
-    req.basic_auth(@login, @password)
+    req.basic_auth(@login, @password) if basic_auth
     req
   end
 
