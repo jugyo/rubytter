@@ -10,13 +10,13 @@ class Rubytter
   class APIError < StandardError; end
 
   APP_NAME = 'Rubytter'
-  VERSION = '0.4.6'
+  VERSION = '0.4.7'
   HOMEPAGE = 'http://github.com/jugyo/rubytter'
 
   attr_reader :login
   attr_accessor :host, :header
 
-  def initialize(login, password, options = {})
+  def initialize(login = nil, password = nil, options = {})
     @login = login
     @password = password
     @host = options[:host] || 'twitter.com'
