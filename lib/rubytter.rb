@@ -16,7 +16,7 @@ class Rubytter
   end
 
   APP_NAME = 'Rubytter'
-  VERSION = '0.4.7'
+  VERSION = '0.4.8'
   HOMEPAGE = 'http://github.com/jugyo/rubytter'
 
   attr_reader :login
