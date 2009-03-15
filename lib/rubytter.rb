@@ -7,7 +7,13 @@ require 'rubytter/connection'
 
 class Rubytter
 
-  class APIError < StandardError; end
+  class APIError < StandardError
+    attr_reader :response
+    def initialize(msg, response = nil)
+      super(msg)
+      @response = response
+    end
+  end
 
   APP_NAME = 'Rubytter'
   VERSION = '0.4.7'
@@ -126,7 +132,7 @@ class Rubytter
     when "200"
       struct
     else
-      raise APIError, struct.error
+      raise APIError.new(struct.error, res)
     end
   end
 
