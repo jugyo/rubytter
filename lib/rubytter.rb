@@ -27,7 +27,8 @@ class Rubytter
     @login = login
     @password = password
     @host = options[:host] || 'twitter.com'
-    @header = options[:header] || {'User-Agent' => "#{APP_NAME}/#{VERSION} (#{HOMEPAGE})"}
+    @header = {'User-Agent' => "#{APP_NAME}/#{VERSION} (#{HOMEPAGE})"}
+    @header.merge!(options[:header]) if options[:header]
     @connection = Connection.new(options)
   end
 

@@ -145,7 +145,19 @@ class Rubytter
       rubytter.header.should == {'User-Agent', "#{APP_NAME}/#{VERSION} (#{HOMEPAGE})"}
     end
 
-    it 'should able to set custom header' do
+    it 'should able to set custom header 1' do
+      rubytter = Rubytter.new('test', 'test',
+        {
+          :header => {
+            'foo' => 'bar'
+          }
+        }
+      )
+      rubytter.header['foo'].should == 'bar'
+      rubytter.header.has_key?('User-Agent').should == true
+    end
+
+    it 'should able to set custom header 2' do
       rubytter = Rubytter.new('test', 'test',
         {
           :header => {
