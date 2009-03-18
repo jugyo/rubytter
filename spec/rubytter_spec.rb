@@ -141,9 +141,9 @@ class Rubytter
     end
 
     it 'should raise when call to_param_str with invalid arg' do
-      lambda { @rubytter.to_param_str(nil) }.should raise_error ArgumentError
-      lambda { @rubytter.to_param_str('foo') }.should raise_error ArgumentError
-      lambda { @rubytter.to_param_str(:bar) }.should raise_error ArgumentError
+      lambda { @rubytter.to_param_str(nil) }.should raise_error(ArgumentError)
+      lambda { @rubytter.to_param_str('foo') }.should raise_error(ArgumentError)
+      lambda { @rubytter.to_param_str(:bar) }.should raise_error(ArgumentError)
     end
 
     it 'should create struct from json' do
