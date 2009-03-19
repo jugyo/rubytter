@@ -142,7 +142,7 @@ class Rubytter
 
     it 'should set default header' do
       rubytter = Rubytter.new('test', 'test')
-      rubytter.header.should == {'User-Agent', "#{APP_NAME}/#{VERSION} (#{HOMEPAGE})"}
+      rubytter.header.should == {'User-Agent', "Rubytter/#{VERSION} (http://github.com/jugyo/rubytter)"}
     end
 
     it 'should able to set custom header 1' do

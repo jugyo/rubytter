@@ -16,9 +16,7 @@ class Rubytter
     end
   end
 
-  APP_NAME = 'Rubytter'
   VERSION = '0.4.8'
-  HOMEPAGE = 'http://github.com/jugyo/rubytter'
 
   attr_reader :login
   attr_accessor :host, :header
@@ -27,7 +25,7 @@ class Rubytter
     @login = login
     @password = password
     @host = options[:host] || 'twitter.com'
-    @header = {'User-Agent' => "#{APP_NAME}/#{VERSION} (#{HOMEPAGE})"}
+    @header = {'User-Agent' => "Rubytter/#{VERSION} (http://github.com/jugyo/rubytter)"}
     @header.merge!(options[:header]) if options[:header]
     @connection = Connection.new(options)
   end
