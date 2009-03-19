@@ -135,9 +135,9 @@ class Rubytter
     end
 
     it 'should raise when call to_param_str with invalid arg' do
-      lambda { @rubytter.to_param_str(nil) }.should raise_error ArgumentError
-      lambda { @rubytter.to_param_str('foo') }.should raise_error ArgumentError
-      lambda { @rubytter.to_param_str(:bar) }.should raise_error ArgumentError
+      lambda { @rubytter.to_param_str(nil) }.should raise_error(ArgumentError)
+      lambda { @rubytter.to_param_str('foo') }.should raise_error(ArgumentError)
+      lambda { @rubytter.to_param_str(:bar) }.should raise_error(ArgumentError)
     end
 
     it 'should set default header' do
@@ -145,7 +145,19 @@ class Rubytter
       rubytter.header.should == {'User-Agent', "#{APP_NAME}/#{VERSION} (#{HOMEPAGE})"}
     end
 
-    it 'should able to set custom header' do
+    it 'should able to set custom header 1' do
+      rubytter = Rubytter.new('test', 'test',
+        {
+          :header => {
+            'foo' => 'bar'
+          }
+        }
+      )
+      rubytter.header['foo'].should == 'bar'
+      rubytter.header.has_key?('User-Agent').should == true
+    end
+
+    it 'should able to set custom header 2' do
       rubytter = Rubytter.new('test', 'test',
         {
           :header => {
