@@ -27,6 +27,7 @@ class Rubytter
     @host = options[:host] || 'twitter.com'
     @header = {'User-Agent' => "Rubytter/#{VERSION} (http://github.com/jugyo/rubytter)"}
     @header.merge!(options[:header]) if options[:header]
+    @app_name = options[:app_name]
     @connection = Connection.new(options)
   end
 
@@ -84,6 +85,12 @@ class Rubytter
         end
       EOS
     end
+  end
+
+  alias_method :__update_status, :update_status
+  def update_status(params = {})
+    params[:source] = @app_name if @app_name
+    __update_status(params)
   end
 
   def update(status, params = {})
