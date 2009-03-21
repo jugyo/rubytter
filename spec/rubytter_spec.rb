@@ -129,16 +129,16 @@ class Rubytter
     end
 
     it 'should respond to to_param_str' do
-      param_str = @rubytter.to_param_str(:page => 2, :foo => 'bar')
+      param_str = Rubytter.to_param_str(:page => 2, :foo => 'bar')
       param_str.should =~ /^.+?=.+?&.+?=.+?$/
       param_str.should =~ /page=2/
       param_str.should =~ /foo=bar/
     end
 
     it 'should raise when call to_param_str with invalid arg' do
-      lambda { @rubytter.to_param_str(nil) }.should raise_error(ArgumentError)
-      lambda { @rubytter.to_param_str('foo') }.should raise_error(ArgumentError)
-      lambda { @rubytter.to_param_str(:bar) }.should raise_error(ArgumentError)
+      lambda { Rubytter.to_param_str(nil) }.should raise_error(ArgumentError)
+      lambda { Rubytter.to_param_str('foo') }.should raise_error(ArgumentError)
+      lambda { Rubytter.to_param_str(:bar) }.should raise_error(ArgumentError)
     end
 
     it 'should set default header' do
@@ -180,7 +180,7 @@ class Rubytter
         :d => {:a => {:a => 1, :b => 2}, :b => 1},
         :e => [{:a => 1, :b => 2}, {:c => 3}]
       }
-      struct = @rubytter.json_to_struct(hash)
+      struct = Rubytter.json_to_struct(hash)
       struct.a.should == 'a'
       struct.b.should == 1
       struct.c.a.should == 1

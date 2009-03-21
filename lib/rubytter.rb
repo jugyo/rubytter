@@ -103,27 +103,27 @@ class Rubytter
 
   def get(path, params = {})
     path += '.json'
-    param_str = '?' + to_param_str(params)
+    param_str = '?' + self.class.to_param_str(params)
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path))
-    json_to_struct(http_request(@host, req))
+    self.class.json_to_struct(http_request(@host, req))
   end
 
   def post(path, params = {})
     path += '.json'
-    param_str = to_param_str(params)
+    param_str = self.class.to_param_str(params)
     req = create_request(Net::HTTP::Post.new(path))
-    json_to_struct(http_request(@host, req, param_str))
+    self.class.json_to_struct(http_request(@host, req, param_str))
   end
   alias delete post
 
   def search(query, params = {})
     path = '/search.json'
-    param_str = '?' + to_param_str(params.merge({:q => query}))
+    param_str = '?' + self.class.to_param_str(params.merge({:q => query}))
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path), false)
     json_data = http_request("search.#{@host}", req)
-    json_to_struct(
+    self.class.json_to_struct(
       json_data['results'].map do |result|
         search_result_to_struct(result)
       end
@@ -171,7 +171,7 @@ class Rubytter
     req
   end
 
-  def json_to_struct(json)
+  def self.json_to_struct(json)
     case json
     when Array
       json.map{|i| json_to_struct(i)}
@@ -193,7 +193,7 @@ class Rubytter
     end
   end
 
-  def to_param_str(hash)
+  def self.to_param_str(hash)
     raise ArgumentError, 'Argument must be a Hash object' unless hash.is_a?(Hash)
     hash.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
   end
