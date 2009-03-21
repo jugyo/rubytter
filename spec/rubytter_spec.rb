@@ -203,6 +203,7 @@ class Rubytter
       json_data = {
         'id' => '123',
         'text' => 'foo foo bar bar',
+        'created_at' => 'Sat, 21 Mar 2009 09:48:20 +0000',
         'source' => '&lt;a href=&quot;http:\/\/twitter.com\/&quot;&gt;web&lt;\/a&gt;',
         'to_usre_id' => '20660692',
         'to_usre' => 'jugyo_test',
@@ -214,6 +215,7 @@ class Rubytter
       result = rubytter.search_result_to_struct(json_data)
       result['id'].should == '123'
       result['text'].should == 'foo foo bar bar'
+      result['created_at'].should == 'Sat, 21 Mar 2009 09:48:20 +0000'
       result['source'].should == "<a href=\"http:\\/\\/twitter.com\\/\">web<\\/a>"
       result['in_reply_to_user_id'].should == '20660692'
       result['in_reply_to_screen_name'].should == 'jugyo_test'
@@ -230,8 +232,9 @@ class Rubytter
       status = statuses[0]
 
       status.id.should == 1365281728
-      status.source.should == "<a href=\"http://twitter.com/\">web</a>"
       status.text.should == "よし、add_hook 呼んでるところが無くなった #termtter"
+      status.created_at.should == "Sat, 21 Mar 2009 09:48:20 +0000"
+      status.source.should == "<a href=\"http://twitter.com/\">web</a>"
       status.in_reply_to_user_id.should == nil
       status.in_reply_to_screen_name.should == nil
       status.in_reply_to_status_id.should == nil
