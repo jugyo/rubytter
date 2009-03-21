@@ -4,6 +4,6 @@ require 'rubygems'
 require 'rubytter'
 
 client = Rubytter.new
-client.search(ARGV[0] || 'rubytter').results.each do |status|
-  puts "#{status.from_user}: #{status.text}"
+client.search(ARGV[0] || 'rubytter').each do |status|
+  puts "#{status.user.screen_name}: #{status.text}"
 end
