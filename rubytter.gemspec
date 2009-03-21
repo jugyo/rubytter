@@ -6,7 +6,6 @@ Gem::Specification.new do |s|
   s.files = %w( lib/rubytter/connection.rb lib/rubytter.rb
                 spec/rubytter_spec.rb spec/spec_helper.rb
                 spec/search.json
-                examples/direct_message.rb examples/favorite.rb examples/follow.rb examples/friends_timeline.rb examples/limit.rb examples/replies.rb examples/search.rb examples/update_status.rb examples/user.rb
                 README.rdoc
                 History.txt
                 Rakefile )
