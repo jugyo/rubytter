@@ -101,6 +101,22 @@ class Rubytter
     send_direct_message(params.merge({:user => user, :text => text}))
   end
 
+  def get(path, params = {})
+    path += '.json'
+    param_str = '?' + to_param_str(params)
+    path = path + param_str unless param_str.empty?
+    req = create_request(Net::HTTP::Get.new(path))
+    json_to_struct(http_request(@host, req))
+  end
+
+  def post(path, params = {})
+    path += '.json'
+    param_str = to_param_str(params)
+    req = create_request(Net::HTTP::Post.new(path))
+    json_to_struct(http_request(@host, req, param_str))
+  end
+  alias delete post
+
   def search(query, params = {})
     path = '/search.json'
     param_str = '?' + to_param_str(params.merge({:q => query}))
@@ -108,23 +124,6 @@ class Rubytter
     req = create_request(Net::HTTP::Get.new(path), false)
     http_request("search.#{@host}", req)
   end
-
-  def get(path, params = {})
-    path += '.json'
-    param_str = '?' + to_param_str(params)
-    path = path + param_str unless param_str.empty?
-    req = create_request(Net::HTTP::Get.new(path))
-    http_request(@host, req)
-  end
-
-  def post(path, params = {})
-    path += '.json'
-    param_str = to_param_str(params)
-    req = create_request(Net::HTTP::Post.new(path))
-    http_request(@host, req, param_str)
-  end
-
-  alias delete post
 
   def http_request(host, req, param_str = nil)
     res = @connection.start(host) do |http|
@@ -134,12 +133,12 @@ class Rubytter
         http.request(req)
       end
     end
-    struct = json_to_struct(JSON.parse(res.body))
+    json_data = JSON.parse(res.body)
     case res.code
     when "200"
-      struct
+      json_data
     else
-      raise APIError.new(struct.error, res)
+      raise APIError.new(json_data['error'], res)
     end
   end
 
