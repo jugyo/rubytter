@@ -141,6 +141,7 @@ class Rubytter
       'in_reply_to_status_id' => nil,
       'user' => {
         'id' => json['from_user_id'],
+        'name' => nil,
         'screen_name' => json['from_user'],
         'profile_image_url' => json['profile_image_url']
       }
