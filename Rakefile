@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.description = "Rubytter is a simple twitter client."
   s.files = %w( #{Dir['lib/**/*.rb'].join(' ')}
                 #{Dir['spec/**/*.rb'].join(' ')}
+                #{Dir['spec/**/*.json'].join(' ')}
                 #{Dir['examples/**/*.rb'].join(' ')}
                 README.rdoc
                 History.txt
