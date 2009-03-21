@@ -113,6 +113,7 @@ class Rubytter
       @rubytter.should_receive(:http_request) do |host, req, param_str|
         req.path.should == '/search.json?q=test'
         host.should == 'search.twitter.com'
+        {'results' => []}
       end
       @rubytter.search('test')
     end
@@ -122,13 +123,13 @@ class Rubytter
         req.path.should =~ /\/search.json\?/
         req.path.should =~ /q=test/
         req.path.should =~ /lang=ja/
+        {'results' => []}
       end
       @rubytter.search('test', :lang => 'ja')
     end
 
     it 'should respond to to_param_str' do
       param_str = @rubytter.to_param_str(:page => 2, :foo => 'bar')
-      p param_str
       param_str.should =~ /^.+?=.+?&.+?=.+?$/
       param_str.should =~ /page=2/
       param_str.should =~ /foo=bar/
@@ -199,7 +200,44 @@ class Rubytter
     end
 
     it 'should convert search results to struct' do
-      # TODO
+      json_data = {
+        'id' => '123',
+        'text' => 'foo foo bar bar',
+        'source' => '&lt;a href=&quot;http:\/\/twitter.com\/&quot;&gt;web&lt;\/a&gt;',
+        'to_usre_id' => '20660692',
+        'to_usre' => 'jugyo_test',
+        'from_user_id' => '3748631',
+        'from_user' => 'jugyo',
+        'profile_image_url' => 'http://s3.amazonaws.com/twitter_production/profile_images/63467667/megane2_normal.png'
+      }
+      rubytter = Rubytter.new('test', 'teat')
+      result = rubytter.search_result_to_struct(json_data)
+      result['id'].should == '123'
+      result['text'].should == 'foo foo bar bar'
+      result['source'].should == "<a href=\"http:\\/\\/twitter.com\\/\">web<\\/a>"
+      result['in_reply_to_user_id'].should == '20660692'
+      result['in_reply_to_screen_name'].should == 'jugyo_test'
+      result['user']['id'].should == '3748631'
+      result['user']['screen_name'].should == 'jugyo'
+      result['user']['profile_image_url'].should == 'http://s3.amazonaws.com/twitter_production/profile_images/63467667/megane2_normal.png'
+    end
+
+    it 'should work search' do
+      json_data = JSON.parse open(File.dirname(__FILE__) + '/search.json').read
+
+      @rubytter.stub!(:http_request).and_return(json_data)
+      statuses = @rubytter.search('termtter')
+      status = statuses[0]
+
+      status.id.should == 1365281728
+      status.source.should == "<a href=\"http://twitter.com/\">web</a>"
+      status.text.should == "よし、add_hook 呼んでるところが無くなった #termtter"
+      status.in_reply_to_user_id.should == nil
+      status.in_reply_to_screen_name.should == nil
+      status.in_reply_to_status_id.should == nil
+      status.user.id.should == 74941
+      status.user.screen_name.should == "jugyo"
+      status.user.profile_image_url.should == "http://s3.amazonaws.com/twitter_production/profile_images/63467667/megane2_normal.png"
     end
   end
 end
