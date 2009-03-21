@@ -122,7 +122,26 @@ class Rubytter
     param_str = '?' + to_param_str(params.merge({:q => query}))
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path), false)
-    http_request("search.#{@host}", req)
+    json_data = http_request("search.#{@host}", req)
+    json_data['results'].map do |result|
+      search_result_to_struct(result)
+    end
+  end
+
+  def search_result_to_struct(json)
+    {
+      :id => json['id'],
+      :text => json['text'],
+      :source => CGI.unescapeHTML(json['source']),
+      :in_reply_to_user_id => json['to_usre_id'],
+      :in_reply_to_screen_name => nil,
+      :in_reply_to_status_id => nil,
+      :user => {
+        :id => json['from_user_id'],
+        :screen_name => json['from_user'],
+        :profile_image_url => json['profile_image_url']
+      }
+    }
   end
 
   def http_request(host, req, param_str = nil)

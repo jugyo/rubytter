@@ -197,5 +197,9 @@ class Rubytter
       rubytter.should_receive(:__update_status).with({:status => 'test', :source => "Foo"})
       rubytter.update('test')
     end
+
+    it 'should convert search results to struct' do
+      # TODO
+    end
   end
 end
