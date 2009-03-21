@@ -15,7 +15,5 @@ Gem::Specification.new do |s|
   s.email = 'jugyo.org@gmail.com'
   s.homepage = 'http://github.com/jugyo/rubytter'
   s.rubyforge_project = 'rubytter'
-  s.has_rdoc = true
-  s.rdoc_options = ["--main", "README.rdoc", "--exclude", "spec"]
-  s.extra_rdoc_files = ["README.rdoc", "History.txt"]
+  s.has_rdoc = false
 end
