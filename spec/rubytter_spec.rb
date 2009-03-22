@@ -193,6 +193,12 @@ class Rubytter
       lambda {struct.regex}.should raise_error(NoMethodError)
     end
 
+    it 'should create same structs from same datas' do
+      Rubytter.json_to_struct({:a => 'a'}).should == Rubytter.json_to_struct({:a => 'a'})
+      Rubytter.json_to_struct({:a => 'a', :b => {:c => 'c'}}).should == 
+        Rubytter.json_to_struct({:a => 'a', :b => {:c => 'c'}})
+    end
+
     it 'should be set app_name' do
       rubytter = Rubytter.new('test', 'teat', :app_name => "Foo")
       rubytter.should_receive(:__update_status).with({:status => 'test', :source => "Foo"})
