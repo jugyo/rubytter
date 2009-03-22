@@ -184,7 +184,7 @@ class Rubytter
         end
       end
       unless struct_values.empty?
-        Struct.new(*struct_values.keys).new(*struct_values.values)
+        get_struct(struct_values.keys).new(*struct_values.values)
       else
         nil
       end
@@ -196,5 +196,13 @@ class Rubytter
   def self.to_param_str(hash)
     raise ArgumentError, 'Argument must be a Hash object' unless hash.is_a?(Hash)
     hash.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
+  end
+
+  def self.get_struct(keys)
+    @@structs ||= {}
+    unless @@structs.has_key?(keys)
+      @@structs[keys] = Struct.new(*keys)
+    end
+    @@structs[keys]
   end
 end
