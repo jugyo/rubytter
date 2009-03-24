@@ -178,7 +178,7 @@ class Rubytter
         nil => nil,
         :c => {:a => 1, :b => 2},
         :d => {:a => {:a => 1, :b => 2}, :b => 1},
-        :e => [{:a => 1, :b => 2}, {:c => 3}]
+        :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
       struct = Rubytter.json_to_struct(hash)
       struct.a.should == 'a'
@@ -188,7 +188,7 @@ class Rubytter
       struct.d.a.a.should == 1
       struct.e[0].a.should == 1
       struct.e[0].b.should == 2
-      struct.e[1].c.should == 3
+      struct.e[1].c.should == '"<>&'
       lambda {struct.x}.should raise_error(NoMethodError)
       lambda {struct.regex}.should raise_error(NoMethodError)
     end
@@ -218,11 +218,11 @@ class Rubytter
         'profile_image_url' => 'http://s3.amazonaws.com/twitter_production/profile_images/63467667/megane2_normal.png'
       }
       rubytter = Rubytter.new('test', 'teat')
-      result = rubytter.search_result_to_struct(json_data)
+      result = Rubytter.search_result_to_hash(json_data)
       result['id'].should == '123'
       result['text'].should == 'foo foo bar bar'
       result['created_at'].should == 'Sat, 21 Mar 2009 09:48:20 +0000'
-      result['source'].should == "<a href=\"http:\\/\\/twitter.com\\/\">web<\\/a>"
+      result['source'].should == '&lt;a href=&quot;http:\/\/twitter.com\/&quot;&gt;web&lt;\/a&gt;'
       result['in_reply_to_user_id'].should == '20660692'
       result['in_reply_to_screen_name'].should == 'jugyo_test'
       result['user']['id'].should == '3748631'

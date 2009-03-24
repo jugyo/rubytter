@@ -125,16 +125,16 @@ class Rubytter
     json_data = http_request("search.#{@host}", req)
     self.class.json_to_struct(
       json_data['results'].map do |result|
-        search_result_to_struct(result)
+        self.class.search_result_to_hash(result)
       end
     )
   end
 
-  def search_result_to_struct(json)
+  def self.search_result_to_hash(json)
     {
       'id' => json['id'],
       'text' => json['text'],
-      'source' => CGI.unescapeHTML(json['source']),
+      'source' => json['source'],
       'created_at' => json['created_at'],
       'in_reply_to_user_id' => json['to_usre_id'],
       'in_reply_to_screen_name' => json['to_usre'],
@@ -189,7 +189,12 @@ class Rubytter
         nil
       end
     else
-      json
+      case json
+      when String
+        CGI.unescapeHTML(json)
+      else
+        json
+      end
     end
   end
 
