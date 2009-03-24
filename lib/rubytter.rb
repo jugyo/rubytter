@@ -16,7 +16,7 @@ class Rubytter
     end
   end
 
-  VERSION = '0.6.4'
+  VERSION = '0.6.5'
 
   attr_reader :login
   attr_accessor :host, :header
