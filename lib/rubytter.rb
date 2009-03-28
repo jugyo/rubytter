@@ -8,6 +8,8 @@ require 'rubytter/connection'
 
 class Rubytter
 
+  VERSION = '0.6.6'
+
   class APIError < StandardError
     attr_reader :response
     def initialize(msg, response = nil)
@@ -15,8 +17,6 @@ class Rubytter
       @response = response
     end
   end
-
-  VERSION = '0.6.5'
 
   attr_reader :login
   attr_accessor :host, :header
