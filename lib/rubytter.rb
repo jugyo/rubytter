@@ -206,7 +206,13 @@ class Rubytter
   def self.get_struct(keys)
     @@structs ||= {}
     unless @@structs.has_key?(keys)
-      @@structs[keys] = Struct.new(*keys)
+      struct = Struct.new(*keys)
+      struct.class_eval do
+        def method_missing(*args, &block)
+          nil
+        end
+      end
+      @@structs[keys] = struct
     end
     @@structs[keys]
   end
