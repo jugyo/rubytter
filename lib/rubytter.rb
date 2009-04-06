@@ -5,6 +5,7 @@ require 'net/https'
 require 'cgi'
 
 require 'rubytter/connection'
+require 'rubytter/oauth_rubytter'
 
 class Rubytter
 
