@@ -248,5 +248,26 @@ class Rubytter
       status.user.screen_name.should == "jugyo"
       status.user.profile_image_url.should == "http://s3.amazonaws.com/twitter_production/profile_images/63467667/megane2_normal.png"
     end
+
+    it 'should post using access_token' do
+      access_token = Object.new
+      rubytter = OAuthRubytter.new(access_token)
+      access_token.should_receive(:post).with('/statuses/update.json', {:status => 'test'}, {"User-Agent"=>"Rubytter/0.6.6 (http://github.com/jugyo/rubytter)"})
+      rubytter.update('test')
+    end
+
+    it 'should get using access_token' do
+      access_token = Object.new
+      rubytter = OAuthRubytter.new(access_token)
+      access_token.should_receive(:get).with('/statuses/friends_timeline.json', {}, {"User-Agent"=>"Rubytter/0.6.6 (http://github.com/jugyo/rubytter)"})
+      rubytter.friends_timeline
+    end
+
+    it 'should get with params using access_token' do
+      access_token = Object.new
+      rubytter = OAuthRubytter.new(access_token)
+      access_token.should_receive(:get).with('/statuses/friends_timeline.json', {:page => 2}, {"User-Agent"=>"Rubytter/0.6.6 (http://github.com/jugyo/rubytter)"})
+      rubytter.friends_timeline(:page => 2)
+    end
   end
 end
