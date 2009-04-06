@@ -189,8 +189,8 @@ class Rubytter
       struct.e[0].a.should == 1
       struct.e[0].b.should == 2
       struct.e[1].c.should == '"<>&'
-      lambda {struct.x}.should raise_error(NoMethodError)
-      lambda {struct.regex}.should raise_error(NoMethodError)
+      struct.x.should == nil
+      struct.regex.should == nil
     end
 
     it 'should create same structs from same datas' do
