@@ -6,7 +6,9 @@ http://wiki.github.com/jugyo/rubytter
 
 Rubytter is simple twitter library.
 
-== FEATURES/PROBLEMS:
+== FEATURES:
+
+* Supports OAuth
 
 implemented API methods:
 
@@ -46,15 +48,21 @@ implemented API methods:
 
 == SYNOPSIS:
 
-initialize:
+=== initialize:
 
  client = Rubytter.new(user_id, password)
 
-update status:
+or
+
+ client = OAuthRubytter.new(access_token)
+
+You must specify valid instance of OAuth::AccessToken as acces_token.
+
+=== update status:
 
  client.update('hello twitter!!')
 
-get friends timeline:
+=== get friends timeline:
 
  client.friends_timeline.each do |status|
    puts "#{status.user.screen_name}: #{status.text}"
