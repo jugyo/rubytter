@@ -10,7 +10,7 @@ Rubytter is simple twitter library.
 
 * Supports OAuth
 
-implemented API methods:
+=== implemented API methods:
 
 - /statuses/update
 - /statuses/destroy/id
