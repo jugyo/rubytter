@@ -212,6 +212,25 @@ class Rubytter
         def method_missing(*args, &block)
           nil
         end
+
+        def to_hash(escape = false)
+          hash = {}
+          self.members.each do |member|
+            value = self[member]
+            if value.respond_to?(:to_hash)
+              hash[member] = value.to_hash(escape)
+            elsif value.is_a?(Array)
+              hash[member] = value.map{ |i| i.to_hash(escape) }
+            else
+              hash[member] = escape && value.is_a?(String) ? CGI.escapeHTML(value) : value
+            end
+          end
+          hash
+        end
+
+        def to_json(escape = false)
+          to_hash(escape).to_json
+        end
       end
       @@structs[keys] = struct
     end

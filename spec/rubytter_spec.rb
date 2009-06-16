@@ -193,6 +193,52 @@ class Rubytter
       struct.regex.should == nil
     end
 
+    it 'should convert struct to hash' do
+      hash = {
+        :a => 'a',
+        'b' => 1,
+        1 => 'a',
+        /regex/ => 'regex',
+        nil => nil,
+        :c => {:a => 1, :b => 2},
+        :d => {:a => {:a => 1, :b => 2}, :b => 1},
+        :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
+      }
+      struct = Rubytter.json_to_struct(hash)
+      struct.to_hash.should == {"a"=>"a", "b"=>1, "c"=>{"a"=>1, "b"=>2}, "d"=>{"a"=>{"a"=>1, "b"=>2}, "b"=>1}, "e"=>[{"a"=>1, "b"=>2}, {"c"=>"\"<>&"}]}
+    end
+
+    it 'should convert struct to hash with escape as HTML' do
+      hash = {
+        :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
+      }
+      struct = Rubytter.json_to_struct(hash)
+      struct.to_hash(true).should == {"e"=>[{"a"=>1, "b"=>2}, {"c"=>"&quot;&lt;&gt;&amp;"}]}
+    end
+
+    it 'should convert struct to json' do
+      hash = {
+        :a => 'a',
+        'b' => 1,
+        1 => 'a',
+        /regex/ => 'regex',
+        nil => nil,
+        :c => {:a => 1, :b => 2},
+        :d => {:a => {:a => 1, :b => 2}, :b => 1},
+        :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
+      }
+      struct = Rubytter.json_to_struct(hash)
+      struct.to_json.should == '{"a":"a","b":1,"c":{"a":1,"b":2},"d":{"a":{"a":1,"b":2},"b":1},"e":[{"a":1,"b":2},{"c":"\"<>&"}]}'
+    end
+
+    it 'should convert struct to json with escape as HTML' do
+      hash = {
+        :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
+      }
+      struct = Rubytter.json_to_struct(hash)
+      struct.to_json(true).should == '{"e":[{"a":1,"b":2},{"c":"&quot;&lt;&gt;&amp;"}]}'
+    end
+
     it 'should create same structs from same datas' do
       Rubytter.json_to_struct({:a => 'a'}).should == Rubytter.json_to_struct({:a => 'a'})
       Rubytter.json_to_struct({:a => 'a', :b => {:c => 'c'}}).should == 
