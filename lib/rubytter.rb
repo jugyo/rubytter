@@ -190,8 +190,6 @@ class Rubytter
           each do |key, value|
             self[(key.to_sym rescue key) || key] = value
           end
-
-          self
         end
       end
 
