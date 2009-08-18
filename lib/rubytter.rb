@@ -9,7 +9,7 @@ require 'rubytter/oauth_rubytter'
 
 class Rubytter
 
-  VERSION = '0.8.0'
+  VERSION = '0.9.0'
 
   class APIError < StandardError
     attr_reader :response
@@ -107,14 +107,14 @@ class Rubytter
     param_str = '?' + self.class.to_param_str(params)
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path))
-    self.class.json_to_struct(http_request(@host, req))
+    self.class.structize(http_request(@host, req))
   end
 
   def post(path, params = {})
     path += '.json'
     param_str = self.class.to_param_str(params)
     req = create_request(Net::HTTP::Post.new(path))
-    self.class.json_to_struct(http_request(@host, req, param_str))
+    self.class.structize(http_request(@host, req, param_str))
   end
   alias delete post
 
@@ -124,7 +124,7 @@ class Rubytter
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path), false)
     json_data = http_request("search.#{@host}", req)
-    self.class.json_to_struct(
+    self.class.structize(
       json_data['results'].map do |result|
         self.class.search_result_to_hash(result)
       end
@@ -172,29 +172,45 @@ class Rubytter
     req
   end
 
-  def self.json_to_struct(json)
-    case json
+  def self.structize(data)
+    case data
     when Array
-      json.map{|i| json_to_struct(i)}
+      data.map{|i| structize(i)}
     when Hash
-      struct_values = {}
-      json.each do |k, v|
-        case k
-        when String, Symbol
-          struct_values[k.to_sym] = json_to_struct(v)
+      class << data
+        def id
+          self[:id]
+        end
+
+        def method_missing(name, *args)
+          self[name]
+        end
+
+        def symbolize_keys!
+          each do |key, value|
+            self[(key.to_sym rescue key) || key] = value
+          end
+
+          self
         end
       end
-      unless struct_values.empty?
-        get_struct(struct_values.keys).new(*struct_values.values)
-      else
-        nil
+
+      data.keys.each do |k|
+        case k
+        when String, Symbol # String しかまず来ないだろうからこの判定はいらない気もするなぁ
+          data[k] = structize(data[k])
+        else
+          data.delete(k)
+        end
       end
+
+      data.symbolize_keys!
     else
-      case json
+      case data
       when String
-        CGI.unescapeHTML(json)
+        CGI.unescapeHTML(data) # ここで unescapeHTML すべきか悩むところではある
       else
-        json
+        data
       end
     end
   end
@@ -202,38 +218,5 @@ class Rubytter
   def self.to_param_str(hash)
     raise ArgumentError, 'Argument must be a Hash object' unless hash.is_a?(Hash)
     hash.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
-  end
-
-  def self.get_struct(keys)
-    @@structs ||= {}
-    unless @@structs.has_key?(keys)
-      struct = Struct.new(*keys)
-      struct.class_eval do
-        def method_missing(*args, &block)
-          nil
-        end
-
-        def to_hash(escape = false)
-          hash = {}
-          self.members.each do |member|
-            value = self[member]
-            if value.respond_to?(:to_hash)
-              hash[member] = value.to_hash(escape)
-            elsif value.is_a?(Array)
-              hash[member] = value.map{ |i| i.to_hash(escape) }
-            else
-              hash[member] = escape && value.is_a?(String) ? CGI.escapeHTML(value) : value
-            end
-          end
-          hash
-        end
-
-        def to_json(escape = false)
-          to_hash(escape).to_json
-        end
-      end
-      @@structs[keys] = struct
-    end
-    @@structs[keys]
   end
 end

@@ -169,7 +169,7 @@ class Rubytter
       rubytter.header.should == {'User-Agent' => 'foo'}
     end
 
-    it 'should create struct from json' do
+    it 'should create struct from json(Hash)' do
       hash = {
         :a => 'a',
         'b' => 1,
@@ -180,7 +180,7 @@ class Rubytter
         :d => {:a => {:a => 1, :b => 2}, :b => 1},
         :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
-      struct = Rubytter.json_to_struct(hash)
+      struct = Rubytter.structize(hash)
       struct.a.should == 'a'
       struct.b.should == 1
       struct.c.a.should == 1
@@ -193,7 +193,20 @@ class Rubytter
       struct.regex.should == nil
     end
 
+    it 'should create struct from json(Array)' do
+      data = [
+        {"status" => {"text" => "foo", "user" => {"screen_name" => "jugyo_foo"}}},
+        {"status" => {"text" => "bar", "user" => {"screen_name" => "jugyo_bar"}}},
+      ]
+      struct = Rubytter.structize(data)
+      struct[0].status.text.should == 'foo'
+      struct[0].status.user.screen_name.should == 'jugyo_foo'
+      struct[1].status.text.should == 'bar'
+      struct[1].status.user.screen_name.should == 'jugyo_bar'
+    end
+
     it 'should convert struct to hash' do
+      pending
       hash = {
         :a => 'a',
         'b' => 1,
@@ -204,19 +217,21 @@ class Rubytter
         :d => {:a => {:a => 1, :b => 2}, :b => 1},
         :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
-      struct = Rubytter.json_to_struct(hash)
+      struct = Rubytter.structize(hash)
       struct.to_hash.should == {"a"=>"a", "b"=>1, "c"=>{"a"=>1, "b"=>2}, "d"=>{"a"=>{"a"=>1, "b"=>2}, "b"=>1}, "e"=>[{"a"=>1, "b"=>2}, {"c"=>"\"<>&"}]}
     end
 
     it 'should convert struct to hash with escape as HTML' do
+      pending
       hash = {
         :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
-      struct = Rubytter.json_to_struct(hash)
+      struct = Rubytter.structize(hash)
       struct.to_hash(true).should == {"e"=>[{"a"=>1, "b"=>2}, {"c"=>"&quot;&lt;&gt;&amp;"}]}
     end
 
     it 'should convert struct to json' do
+      pending
       hash = {
         :a => 'a',
         'b' => 1,
@@ -227,22 +242,23 @@ class Rubytter
         :d => {:a => {:a => 1, :b => 2}, :b => 1},
         :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
-      struct = Rubytter.json_to_struct(hash)
+      struct = Rubytter.structize(hash)
       struct.to_json.should == '{"a":"a","b":1,"c":{"a":1,"b":2},"d":{"a":{"a":1,"b":2},"b":1},"e":[{"a":1,"b":2},{"c":"\"<>&"}]}'
     end
 
     it 'should convert struct to json with escape as HTML' do
+      pending
       hash = {
         :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
-      struct = Rubytter.json_to_struct(hash)
+      struct = Rubytter.structize(hash)
       struct.to_json(true).should == '{"e":[{"a":1,"b":2},{"c":"&quot;&lt;&gt;&amp;"}]}'
     end
 
     it 'should create same structs from same datas' do
-      Rubytter.json_to_struct({:a => 'a'}).should == Rubytter.json_to_struct({:a => 'a'})
-      Rubytter.json_to_struct({:a => 'a', :b => {:c => 'c'}}).should == 
-        Rubytter.json_to_struct({:a => 'a', :b => {:c => 'c'}})
+      Rubytter.structize({:a => 'a'}).should == Rubytter.structize({:a => 'a'})
+      Rubytter.structize({:a => 'a', :b => {:c => 'c'}}).should == 
+        Rubytter.structize({:a => 'a', :b => {:c => 'c'}})
     end
 
     it 'should be set app_name' do
