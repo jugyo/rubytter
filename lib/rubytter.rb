@@ -9,7 +9,7 @@ require 'rubytter/oauth_rubytter'
 
 class Rubytter
 
-  VERSION = '0.9.0'
+  VERSION = '0.9.1'
 
   class APIError < StandardError
     attr_reader :response
