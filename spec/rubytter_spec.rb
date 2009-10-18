@@ -206,7 +206,6 @@ class Rubytter
     end
 
     it 'should convert struct to hash' do
-      pending
       hash = {
         :a => 'a',
         'b' => 1,
@@ -218,7 +217,14 @@ class Rubytter
         :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
       struct = Rubytter.structize(hash)
-      struct.to_hash.should == {"a"=>"a", "b"=>1, "c"=>{"a"=>1, "b"=>2}, "d"=>{"a"=>{"a"=>1, "b"=>2}, "b"=>1}, "e"=>[{"a"=>1, "b"=>2}, {"c"=>"\"<>&"}]}
+      struct.to_hash.should == {
+        :a => "a",
+        "b" => 1,
+        :b => 1,
+        :c => {:b => 2, :a => 1},
+        :e => [{:b => 2, :a => 1}, {:c => "\"<>&"}],
+        :d => {:b => 1, :a => {:b => 2, :a => 1}}
+      }
     end
 
     it 'should convert struct to hash with escape as HTML' do
@@ -312,27 +318,45 @@ class Rubytter
     end
 
     it 'should post using access_token' do
-      pending('use mock')
       access_token = Object.new
       rubytter = OAuthRubytter.new(access_token)
-      access_token.should_receive(:post).with('/statuses/update.json?status=tset', {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"})
+      response = simple_mock(:body => '{}', :code => '200')
+      access_token.should_receive(:post).with(
+        "/statuses/update.json",
+        {:status => 'test'},
+        {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
+      ).and_return(response)
       rubytter.update('test')
     end
 
     it 'should get using access_token' do
-      pending('use mock')
       access_token = Object.new
       rubytter = OAuthRubytter.new(access_token)
-      access_token.should_receive(:get).with('/statuses/friends_timeline.json', {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"})
+      response = simple_mock(:body => '{}', :code => '200')
+      access_token.should_receive(:get).with(
+        '/statuses/friends_timeline.json',
+        {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
+      ).and_return(response)
       rubytter.friends_timeline
     end
 
     it 'should get with params using access_token' do
-      pending('use mock')
       access_token = Object.new
       rubytter = OAuthRubytter.new(access_token)
-      access_token.should_receive(:get).with('/statuses/friends_timeline.json?page=2', {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"})
+      response = simple_mock(:body => '{}', :code => '200')
+      access_token.should_receive(:get).with(
+        '/statuses/friends_timeline.json?page=2',
+        {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
+      ).and_return(response)
       rubytter.friends_timeline(:page => 2)
+    end
+
+    def simple_mock(options)
+      o = Object.new
+      options.each do |k, v|
+        o.should_receive(k).and_return(v)
+      end
+      o
     end
   end
 end

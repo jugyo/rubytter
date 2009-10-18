@@ -9,16 +9,14 @@ class OAuthRubytter < Rubytter
 
   def get(path, params = {})
     path += '.json'
-    param_str = '?' + self.class.to_param_str(params)
-    path = path + param_str unless param_str.empty?
+    param_str = self.class.to_param_str(params)
+    path = path + '?' + param_str unless param_str.empty?
     structize(@access_token.get(path, @header))
   end
 
   def post(path, params = {})
     path += '.json'
-    param_str = '?' + self.class.to_param_str(params)
-    path = path + param_str unless param_str.empty?
-    structize(@access_token.post(path, @header))
+    structize(@access_token.post(path, params, @header))
   end
 
   def structize(res)
