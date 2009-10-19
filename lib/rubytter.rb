@@ -40,6 +40,7 @@ class Rubytter
       public_timeline         /statuses/public_timeline
       friends_timeline        /statuses/friends_timeline
       replies                 /statuses/replies
+      mentions                /statuses/mentions
       user_timeline           /statuses/user_timeline/%s
       show                    /statuses/show/%s
       friends                 /statuses/friends/%s
@@ -67,6 +68,13 @@ class Rubytter
       disable_notification    /notifications/leave/%s         post
       block                   /blocks/create/%s               post
       unblock                 /blocks/destroy/%s              delete
+      block_exists            /blocks/exists/%s               get
+      blocking                /blocks/blocking                get
+      blocking_ids            /blocks/blocking/ids            get
+      saved_searches          /saved_searches                 get
+      saved_search            /saved_searches/show/%s         get
+      create_saved_search     /saved_searches/create          post
+      remove_saved_search     /saved_searches/destroy/%s      delete
     ".strip.split("\n").map{|line| line.strip.split(/\s+/)}
   end
 
@@ -92,6 +100,12 @@ class Rubytter
   def update_status(params = {})
     params[:source] = @app_name if @app_name
     __update_status(params)
+  end
+
+  alias_method :__create_saved_search, :create_saved_search
+  def create_saved_search(arg)
+    arg = {:query => arg} if arg.kind_of?(String)
+    __create_saved_search(arg)
   end
 
   def update(status, params = {})
