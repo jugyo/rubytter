@@ -30,6 +30,7 @@ class Rubytter
     @header.merge!(options[:header]) if options[:header]
     @app_name = options[:app_name]
     @connection = Connection.new(options)
+    @connection_for_search = Connection.new(options.merge({:enable_ssl => false}))
   end
 
   def self.api_settings
@@ -157,7 +158,8 @@ class Rubytter
     param_str = '?' + self.class.to_param_str(params.merge({:q => query}))
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path), false)
-    json_data = http_request("search.#{@host}", req)
+
+    json_data = http_request("search.#{@host}", req, nil, @connection_for_search)
     self.class.structize(
       json_data['results'].map do |result|
         self.class.search_result_to_hash(result)
@@ -183,8 +185,9 @@ class Rubytter
     }
   end
 
-  def http_request(host, req, param_str = nil)
-    res = @connection.start(host) do |http|
+  def http_request(host, req, param_str = nil, connection = nil)
+    connection ||= @connection
+    res = connection.start(host) do |http|
       if param_str
         http.request(req, param_str)
       else

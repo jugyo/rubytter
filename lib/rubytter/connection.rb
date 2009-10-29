@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class Rubytter
   class Connection
-    attr_reader :protocol, :port, :proxy_uri
+    attr_reader :protocol, :port, :proxy_uri, :enable_ssl
 
     def initialize(options = {})
       @proxy_host = options[:proxy_host]
@@ -11,20 +11,20 @@ class Rubytter
       @proxy_uri = nil
       @enable_ssl = options[:enable_ssl]
 
-      if @proxy_host
-        @http_class = Net::HTTP::Proxy(@proxy_host, @proxy_port,
-                                       @proxy_user, @proxy_password)
-        @proxy_uri =  "http://" + @proxy_host + ":" + @proxy_port.to_s + "/"
-      else
-        @http_class = Net::HTTP
-      end
-
       if @enable_ssl
         @protocol = "https"
         @port = 443
       else
         @protocol = "http"
         @port = 80
+      end
+
+      if @proxy_host
+        @http_class = Net::HTTP::Proxy(@proxy_host, @proxy_port,
+                                       @proxy_user, @proxy_password)
+        @proxy_uri =  "#{@protocol}://" + @proxy_host + ":" + @proxy_port.to_s + "/"
+      else
+        @http_class = Net::HTTP
       end
     end
 

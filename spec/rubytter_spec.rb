@@ -358,5 +358,25 @@ class Rubytter
       end
       o
     end
+
+    describe 'spec for ssl' do
+      before do
+        @ssl_rubytter = Rubytter.new('foo', 'bar', {:enable_ssl => true})
+      end
+
+      it 'connection is enabled ssl' do
+        @ssl_rubytter.instance_eval{@connection.enable_ssl}.should == true
+      end
+
+      it 'connection_for_search is not ever ssl' do
+        connection_for_search = @ssl_rubytter.instance_eval{@connection_for_search}
+        connection_for_search.enable_ssl.should == false
+
+        @ssl_rubytter.should_receive(:http_request).
+          with('search.twitter.com', anything, nil, connection_for_search).
+          and_return({'results' => []})
+        @ssl_rubytter.search('rubytter')
+      end
+    end
   end
 end
