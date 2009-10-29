@@ -1,45 +1,51 @@
-# -*- coding: utf-8 -*-
-$:.unshift File.dirname(__FILE__) + '/lib/'
-require 'rubytter'
-require 'spec/rake/spectask'
+require 'rubygems'
+require 'rake'
 
-desc 'run all specs'
-Spec::Rake::SpecTask.new do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.spec_opts = ['-c']
-end
-
-desc 'Generate gemspec'
-task :gemspec do |t|
-  open('rubytter.gemspec', "wb" ) do |file|
-    file << <<-EOS
-Gem::Specification.new do |s|
-  s.name = 'rubytter'
-  s.version = '#{Rubytter::VERSION}'
-  s.summary = "Simple twitter client."
-  s.description = "Rubytter is a simple twitter client."
-  s.files = %w( #{Dir['lib/**/*.rb'].join(' ')}
-                #{Dir['spec/**/*.rb'].join(' ')}
-                #{Dir['spec/**/*.json'].join(' ')}
-                #{Dir['examples/**/*.rb'].join(' ')}
-                README.rdoc
-                History.txt
-                Rakefile )
-  s.add_dependency("json_pure", ">= 1.1.3")
-  s.author = 'jugyo'
-  s.email = 'jugyo.org@gmail.com'
-  s.homepage = 'http://github.com/jugyo/rubytter'
-  s.rubyforge_project = 'rubytter'
-  s.has_rdoc = true
-  s.rdoc_options = ["--main", "README.rdoc", "--exclude", "spec"]
-  s.extra_rdoc_files = ["README.rdoc", "History.txt"]
-end
-    EOS
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = "rubytter"
+    gem.summary = %Q{Simple twitter client.}
+    gem.description = %Q{Rubytter is a simple twitter client.}
+    gem.email = "jugyo.org@gmail.com"
+    gem.homepage = "http://github.com/jugyo/rubytter"
+    gem.authors = ["jugyo"]
+    gem.files = FileList['lib/**/*.rb', 'README.rdoc', 'History.txt', 'Rakefile', 'spec/**/*.rb', 'spec/**/*.json', 'examples/**/*.rb']
+    gem.add_dependency("json_pure", ">= 1.1.3")
+    gem.add_development_dependency "rspec"
+    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
-  puts "Generate gemspec"
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-desc 'Generate gem'
-task :gem => :gemspec do |t|
-  system 'gem', 'build', 'rubytter.gemspec'
+require 'spec/rake/spectask'
+Spec::Rake::SpecTask.new(:spec) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.spec_files = FileList['spec/**/*_spec.rb']
+  spec.spec_opts = ['-c']
+end
+
+Spec::Rake::SpecTask.new(:rcov) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
+end
+
+task :spec => :check_dependencies
+
+task :default => :spec
+
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  if File.exist?('VERSION')
+    version = File.read('VERSION')
+  else
+    version = ""
+  end
+
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title = "rubytter #{version}"
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('lib/**/*.rb')
 end

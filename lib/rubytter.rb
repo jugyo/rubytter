@@ -8,9 +8,6 @@ require 'rubytter/connection'
 require 'rubytter/oauth_rubytter'
 
 class Rubytter
-
-  VERSION = '0.9.2'
-
   class APIError < StandardError
     attr_reader :response
     def initialize(msg, response = nil)
