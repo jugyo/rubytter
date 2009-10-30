@@ -9,6 +9,7 @@ begin
     gem.description = %Q{Rubytter is a simple twitter client.}
     gem.email = "jugyo.org@gmail.com"
     gem.homepage = "http://github.com/jugyo/rubytter"
+    gem.rubyforge_project = "rubytter"
     gem.authors = ["jugyo"]
     gem.files = FileList['lib/**/*.rb', 'README.rdoc', 'History.txt', 'Rakefile', 'spec/**/*.rb', 'spec/**/*.json', 'examples/**/*.rb']
     gem.add_dependency("json_pure", ">= 1.1.3")
