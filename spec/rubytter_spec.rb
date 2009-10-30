@@ -317,6 +317,38 @@ class Rubytter
       status.user.profile_image_url.should == "http://s3.amazonaws.com/twitter_production/profile_images/63467667/megane2_normal.png"
     end
 
+    it 'should POST /:user/list to create list' do
+      @rubytter.should_receive(:post).with("/test/lists", {:name=>"foo"})
+      @rubytter.create_list('foo')
+    end
+
+    it 'should PUT /:user/list to update list' do
+      @rubytter.should_receive(:put).with("/test/lists/foo", {})
+      @rubytter.update_list('foo')
+    end
+
+    it 'should DELETE /:user/list to delete list' do
+      @rubytter.should_receive(:delete).with("/test/lists/foo", {})
+      @rubytter.delete_list('foo')
+    end
+
+    it 'should GET lists for specified user' do
+      @rubytter.should_receive(:get).with("/jugyo/lists", {})
+      @rubytter.lists('jugyo')
+    end
+
+    it 'should add member to list' do
+      @rubytter.should_receive(:post).with("/test/foo/members", {:id=>"jugyo"})
+      @rubytter.add_member_to_list('foo', 'jugyo')
+    end
+
+    it 'should remove member to list' do
+      @rubytter.should_receive(:delete).with("/test/foo/members", {:id=>"jugyo"})
+      @rubytter.remove_member_from_list('foo', 'jugyo')
+    end
+
+    # TODO: You should write more specs for Lists API...
+
     it 'should post using access_token' do
       access_token = Object.new
       rubytter = OAuthRubytter.new(access_token)
