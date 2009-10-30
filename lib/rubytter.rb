@@ -78,14 +78,14 @@ class Rubytter
       create_list             /%s/lists                       post
       update_list             /%s/lists/%s                    post
       lists                   /%s/lists
-      list_memberships        /%s/lists/memberships
+      lists_followers         /%s/lists/memberships
       delete_list             /%s/lists/%s                    delete
       list_statuses           /%s/lists/%s/statuses
       list                    /%s/lists/%s
       list_members            /%s/%s/members
       add_member_to_list      /%s/%s/members                  post
       remove_member_from_list /%s/%s/members                  delete
-      list_subscribers        /%s/%s/subscribers
+      list_following          /%s/%s/subscribers
       follow_list             /%s/%s/subscribers              post
       remove_list             /%s/%s/subscribers              delete
     ".strip.split("\n").map{|line| line.strip.split(/\s+/)}
