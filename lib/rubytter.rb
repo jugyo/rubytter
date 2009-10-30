@@ -81,10 +81,11 @@ class Rubytter
   api_settings.each do |array|
     method, path, http_method = *array
     http_method ||= 'get'
-    if /%s$/ =~ path
+    if /%s/ =~ path
       eval <<-EOS
-        def #{method}(id, params = {})
-          #{http_method}('#{path}' % id, params)
+        def #{method}(*args)
+          params = args.last.kind_of?(Hash) ? args.pop : {}
+          #{http_method}('#{path}' % args, params)
         end
       EOS
     else
