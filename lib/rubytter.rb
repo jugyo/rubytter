@@ -144,7 +144,13 @@ class Rubytter
     req = create_request(Net::HTTP::Post.new(path))
     self.class.structize(http_request(@host, req, param_str))
   end
-  alias delete post
+
+  def delete(path, params = {})
+    path += '.json'
+    param_str = self.class.to_param_str(params)
+    req = create_request(Net::HTTP::Delete.new(path))
+    self.class.structize(http_request(@host, req, param_str))
+  end
 
   def search(query, params = {})
     path = '/search.json'
