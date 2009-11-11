@@ -11,7 +11,7 @@ begin
     gem.homepage = "http://github.com/jugyo/rubytter"
     gem.rubyforge_project = "rubytter"
     gem.authors = ["jugyo"]
-    gem.files = FileList['lib/**/*.rb', 'README.rdoc', 'History.txt', 'Rakefile', 'spec/**/*.rb', 'spec/**/*.json', 'examples/**/*.rb']
+    gem.files = FileList['lib/**/*.rb', 'VERSION', 'README.rdoc', 'History.txt', 'Rakefile', 'spec/**/*.rb', 'spec/**/*.json', 'examples/**/*.rb']
     gem.add_dependency("json_pure", ">= 1.1.3")
     gem.add_development_dependency "rspec"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
