@@ -55,7 +55,7 @@ class Rubytter
       friendship_exists       /friendships/exists
       followers_ids           /followers/ids/%s
       friends_ids             /friends/ids/%s
-      favorites               /favorites
+      favorites               /favorites/%s
       favorite                /favorites/create/%s            post
       remove_favorite         /favorites/destroy/%s           delete
       verify_credentials      /account/verify_credentials     get
@@ -99,7 +99,9 @@ class Rubytter
         def #{method}(*args)
           path = login ? '#{path}'.gsub(':user', login) :'#{path}'
           params = args.last.kind_of?(Hash) ? args.pop : {}
-          #{http_method}(path % args, params)
+          path = path % args
+          path.sub!(/\\/\\z/, '')
+          #{http_method}(path, params)
         end
       EOS
     else
