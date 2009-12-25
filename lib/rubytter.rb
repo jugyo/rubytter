@@ -47,6 +47,11 @@ class Rubytter
       show                    /statuses/show/%s
       friends                 /statuses/friends/%s
       followers               /statuses/followers/%s
+      retweet                 /statuses/retweet/%s            post
+      retweets                /statuses/retweets/%s
+      retweeted_by_me         /statuses/retweeted_by_me
+      retweeted_to_me         /statuses/retweeted_to_me
+      retweets_of_me          /statuses/retweets_of_me
       user                    /users/show/%s
       direct_messages         /direct_messages
       sent_direct_messages    /direct_messages/sent
