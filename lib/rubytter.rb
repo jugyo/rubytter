@@ -192,6 +192,14 @@ class Rubytter
     )
   end
 
+  def search_user(query, params = {})
+    path = '/1/users/search.json'
+    param_str = '?' + self.class.to_param_str(params.merge({:q => query}))
+    path = path + param_str unless param_str.empty?
+    req = create_request(Net::HTTP::Get.new(path))
+    self.class.structize(http_request("api.#{@host}", req))
+  end
+
   def self.search_result_to_hash(json)
     {
       'id' => json['id'],
