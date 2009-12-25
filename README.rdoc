@@ -13,38 +13,66 @@ Rubytter is simple twitter library.
 === implemented API methods:
 
 - /statuses/update
-- /statuses/destroy/id
+- /statuses/destroy/%s
 - /statuses/public_timeline
+- /statuses/home_timeline
 - /statuses/friends_timeline
 - /statuses/replies
-- /statuses/user_timeline/id
-- /statuses/show/id
-- /statuses/friends/id
-- /statuses/followers/id
-- /users/show/id
+- /statuses/mentions
+- /statuses/user_timeline/%s
+- /statuses/show/%s
+- /statuses/friends/%s
+- /statuses/followers/%s
+- /statuses/retweet/%s
+- /statuses/retweets/%s
+- /statuses/retweeted_by_me
+- /statuses/retweeted_to_me
+- /statuses/retweets_of_me
+- /users/show/%s
 - /direct_messages
 - /direct_messages/sent
 - /direct_messages/new
-- /direct_messages/destroy/id
-- /friendships/create/id
-- /friendships/destroy/id
+- /direct_messages/destroy/%s
+- /friendships/create/%s
+- /friendships/destroy/%s
 - /friendships/exists
-- /followers/ids/id
-- /friends/ids/id
-- /favorites
-- /favorites/create/id
-- /favorites/destroy/id
+- /followers/ids/%s
+- /friends/ids/%s
+- /favorites/%s
+- /favorites/create/%s
+- /favorites/destroy/%s
 - /account/verify_credentials
 - /account/end_session
 - /account/update_delivery_device
 - /account/update_profile_colors
 - /account/rate_limit_status
 - /account/update_profile
-- /notifications/follow/id
-- /notifications/leave/id
-- /blocks/create/id
-- /blocks/destroy/id
+- /notifications/follow/%s
+- /notifications/leave/%s
+- /blocks/create/%s
+- /blocks/destroy/%s
+- /blocks/exists/%s
+- /blocks/blocking
+- /blocks/blocking/ids
+- /saved_searches
+- /saved_searches/show/%s
+- /saved_searches/create
+- /saved_searches/destroy/%s
+- /:user/lists (create)
+- /:user/lists/%s (update)
+- /:user/lists/%s (delete)
+- /:user/lists
+- /:user/lists/memberships
+- /:user/lists/%s/statuses
+- /:user/lists/%s
+- /%s/%s/members
+- /:user/%s/members
+- /:user/%s/members
+- /%s/%s/subscribers
+- /%s/%s/subscribers
+- /%s/%s/subscribers
 - (search.twitter.com)/search
+- (api.twitter.com)/1/users/search
 
 == SYNOPSIS:
 
