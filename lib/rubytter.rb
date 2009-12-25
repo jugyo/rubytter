@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 require 'rubygems'
 require 'json'
@@ -38,6 +39,7 @@ class Rubytter
       update_status           /statuses/update                post
       remove_status           /statuses/destroy/%s            delete
       public_timeline         /statuses/public_timeline
+      home_timeline           /statuses/home_timeline
       friends_timeline        /statuses/friends_timeline
       replies                 /statuses/replies
       mentions                /statuses/mentions
