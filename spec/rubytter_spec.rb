@@ -129,16 +129,16 @@ class Rubytter
     end
 
     it 'should respond to to_param_str' do
-      param_str = Rubytter.to_param_str(:page => 2, :foo => 'bar')
+      param_str = @rubytter.to_param_str(:page => 2, :foo => 'bar')
       param_str.should =~ /^.+?=.+?&.+?=.+?$/
       param_str.should =~ /page=2/
       param_str.should =~ /foo=bar/
     end
 
     it 'should raise when call to_param_str with invalid arg' do
-      lambda { Rubytter.to_param_str(nil) }.should raise_error(ArgumentError)
-      lambda { Rubytter.to_param_str('foo') }.should raise_error(ArgumentError)
-      lambda { Rubytter.to_param_str(:bar) }.should raise_error(ArgumentError)
+      lambda { @rubytter.to_param_str(nil) }.should raise_error(ArgumentError)
+      lambda { @rubytter.to_param_str('foo') }.should raise_error(ArgumentError)
+      lambda { @rubytter.to_param_str(:bar) }.should raise_error(ArgumentError)
     end
 
     it 'should set default header' do
@@ -180,7 +180,7 @@ class Rubytter
         :d => {:a => {:a => 1, :b => 2}, :b => 1},
         :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
-      struct = Rubytter.structize(hash)
+      struct = @rubytter.structize(hash)
       struct.a.should == 'a'
       struct.b.should == 1
       struct.c.a.should == 1
@@ -198,7 +198,7 @@ class Rubytter
         {"status" => {"text" => "foo", "user" => {"screen_name" => "jugyo_foo"}}},
         {"status" => {"text" => "bar", "user" => {"screen_name" => "jugyo_bar"}}},
       ]
-      struct = Rubytter.structize(data)
+      struct = @rubytter.structize(data)
       struct[0].status.text.should == 'foo'
       struct[0].status.user.screen_name.should == 'jugyo_foo'
       struct[1].status.text.should == 'bar'
@@ -216,7 +216,7 @@ class Rubytter
         :d => {:a => {:a => 1, :b => 2}, :b => 1},
         :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
-      struct = Rubytter.structize(hash)
+      struct = @rubytter.structize(hash)
       struct.to_hash.should == {
         :a => "a",
         :b => 1,
@@ -231,7 +231,7 @@ class Rubytter
       hash = {
         :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
-      struct = Rubytter.structize(hash)
+      struct = @rubytter.structize(hash)
       struct.to_hash(true).should == {"e"=>[{"a"=>1, "b"=>2}, {"c"=>"&quot;&lt;&gt;&amp;"}]}
     end
 
@@ -247,7 +247,7 @@ class Rubytter
         :d => {:a => {:a => 1, :b => 2}, :b => 1},
         :e => [{:a => 1, :b => 2}, {:c => '&quot;&lt;&gt;&amp;'}]
       }
-      struct = Rubytter.structize(hash)
+      struct = @rubytter.structize(hash)
       struct.to_json.should == '{"a":"a","b":1,"c":{"a":1,"b":2},"d":{"a":{"a":1,"b":2},"b":1},"e":[{"a":1,"b":2},{"c":"\"<>&"}]}'
     end
 
@@ -261,9 +261,9 @@ class Rubytter
     end
 
     it 'should create same structs from same datas' do
-      Rubytter.structize({:a => 'a'}).should == Rubytter.structize({:a => 'a'})
-      Rubytter.structize({:a => 'a', :b => {:c => 'c'}}).should == 
-        Rubytter.structize({:a => 'a', :b => {:c => 'c'}})
+      @rubytter.structize({:a => 'a'}).should == @rubytter.structize({:a => 'a'})
+      @rubytter.structize({:a => 'a', :b => {:c => 'c'}}).should ==
+        @rubytter.structize({:a => 'a', :b => {:c => 'c'}})
     end
 
     it 'should be set app_name' do
@@ -284,8 +284,7 @@ class Rubytter
         'from_user' => 'jugyo',
         'profile_image_url' => 'http://s3.amazonaws.com/twitter_production/profile_images/63467667/megane2_normal.png'
       }
-      rubytter = Rubytter.new('test', 'teat')
-      result = Rubytter.search_result_to_hash(json_data)
+      result = @rubytter.search_result_to_hash(json_data)
       result['id'].should == '123'
       result['text'].should == 'foo foo bar bar'
       result['created_at'].should == 'Sat, 21 Mar 2009 09:48:20 +0000'

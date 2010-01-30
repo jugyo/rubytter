@@ -159,49 +159,49 @@ class Rubytter
 
   def get(path, params = {})
     path += '.json'
-    param_str = '?' + self.class.to_param_str(params)
+    param_str = '?' + to_param_str(params)
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path))
-    self.class.structize(http_request(@host, req))
+    structize(http_request(@host, req))
   end
 
   def post(path, params = {})
     path += '.json'
-    param_str = self.class.to_param_str(params)
+    param_str = to_param_str(params)
     req = create_request(Net::HTTP::Post.new(path))
-    self.class.structize(http_request(@host, req, param_str))
+    structize(http_request(@host, req, param_str))
   end
 
   def delete(path, params = {})
     path += '.json'
-    param_str = self.class.to_param_str(params)
+    param_str = to_param_str(params)
     req = create_request(Net::HTTP::Delete.new(path))
-    self.class.structize(http_request(@host, req, param_str))
+    structize(http_request(@host, req, param_str))
   end
 
   def search(query, params = {})
     path = '/search.json'
-    param_str = '?' + self.class.to_param_str(params.merge({:q => query}))
+    param_str = '?' + to_param_str(params.merge({:q => query}))
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path), false)
 
     json_data = http_request("search.#{@host}", req, nil, @connection_for_search)
-    self.class.structize(
+    structize(
       json_data['results'].map do |result|
-        self.class.search_result_to_hash(result)
+        search_result_to_hash(result)
       end
     )
   end
 
   def search_user(query, params = {})
     path = '/1/users/search.json'
-    param_str = '?' + self.class.to_param_str(params.merge({:q => query}))
+    param_str = '?' + to_param_str(params.merge({:q => query}))
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path))
-    self.class.structize(http_request("api.#{@host}", req))
+    structize(http_request("api.#{@host}", req))
   end
 
-  def self.search_result_to_hash(json)
+  def search_result_to_hash(json)
     {
       'id' => json['id'],
       'text' => json['text'],
@@ -243,7 +243,7 @@ class Rubytter
     req
   end
 
-  def self.structize(data)
+  def structize(data)
     case data
     when Array
       data.map{|i| structize(i)}
@@ -278,7 +278,7 @@ class Rubytter
     end
   end
 
-  def self.to_param_str(hash)
+  def to_param_str(hash)
     raise ArgumentError, 'Argument must be a Hash object' unless hash.is_a?(Hash)
     hash.to_a.map{|i| i[0].to_s + '=' + CGI.escape(i[1].to_s) }.join('&')
   end

@@ -9,7 +9,7 @@ class OAuthRubytter < Rubytter
 
   def get(path, params = {})
     path += '.json'
-    param_str = self.class.to_param_str(params)
+    param_str = to_param_str(params)
     path = path + '?' + param_str unless param_str.empty?
     structize(@access_token.get(path, @header))
   end
@@ -35,7 +35,7 @@ class OAuthRubytter < Rubytter
     json_data = JSON.parse(res.body)
     case res.code
     when "200"
-      self.class.structize(json_data)
+      structize(json_data)
     else
       raise APIError.new(json_data['error'], res)
     end
