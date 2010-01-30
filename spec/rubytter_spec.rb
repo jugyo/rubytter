@@ -219,7 +219,6 @@ class Rubytter
       struct = Rubytter.structize(hash)
       struct.to_hash.should == {
         :a => "a",
-        "b" => 1,
         :b => 1,
         :c => {:b => 2, :a => 1},
         :e => [{:b => 2, :a => 1}, {:c => "\"<>&"}],

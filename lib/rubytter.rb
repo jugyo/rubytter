@@ -256,12 +256,6 @@ class Rubytter
         def method_missing(name, *args)
           self[name]
         end
-
-        def symbolize_keys!
-          each do |key, value|
-            self[(key.to_sym rescue key) || key] = value
-          end
-        end
       end
 
       data.keys.each do |k|
