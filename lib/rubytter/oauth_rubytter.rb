@@ -11,27 +11,27 @@ class OAuthRubytter < Rubytter
     path += '.json'
     param_str = to_param_str(params)
     path = path + '?' + param_str unless param_str.empty?
-    structize(@access_token.get(path, @header))
+    parse_response(@access_token.get(path, @header))
   end
 
   def post(path, params = {})
     path += '.json'
-    structize(@access_token.post(path, params.stringify_keys, @header))
+    parse_response(@access_token.post(path, params.stringify_keys, @header))
   end
 
   def put(path, params = {})
     path += '.json'
-    structize(@access_token.put(path, params, @header))
+    parse_response(@access_token.put(path, params.stringify_keys, @header))
   end
 
   def delete(path, params = {})
     path += '.json'
-    param_str = self.class.to_param_str(params)
+    param_str = to_param_str(params)
     path = path + '?' + param_str unless param_str.empty?
-    structize(@access_token.delete(path, @header))
+    parse_response(@access_token.delete(path, @header))
   end
 
-  def structize(res)
+  def parse_response(res)
     json_data = JSON.parse(res.body)
     case res.code
     when "200"
