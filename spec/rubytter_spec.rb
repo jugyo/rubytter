@@ -355,7 +355,7 @@ class Rubytter
       response = simple_mock(:body => '{}', :code => '200')
       access_token.should_receive(:post).with(
         "/statuses/update.json",
-        {:status => 'test'},
+        {'status' => 'test'},
         {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
       ).and_return(response)
       rubytter.update('test')

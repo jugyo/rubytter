@@ -16,7 +16,7 @@ class OAuthRubytter < Rubytter
 
   def post(path, params = {})
     path += '.json'
-    structize(@access_token.post(path, params, @header))
+    structize(@access_token.post(path, params.stringify_keys, @header))
   end
 
   def put(path, params = {})
