@@ -5,9 +5,9 @@ require 'rubytter'
 key = ""
 secret = ""
 
-consumer = OAuth::Consumer.new(key, secret, :site => "http://twitter.com")
+oauth = Rubytter::OAuth.new(key, secret)
 
-request_token = consumer.get_request_token
+request_token = oauth.get_request_token
 system('open', request_token.authorize_url) || puts("Access here: #{request_token.authorize_url}\nand...")
 
 print "Enter PIN: "
