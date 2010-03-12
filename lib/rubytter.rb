@@ -7,9 +7,8 @@ require 'cgi'
 require 'oauth'
 require 'rubytter/core_ext'
 require 'rubytter/connection'
+require 'rubytter/oauth'
 require 'rubytter/oauth_rubytter'
-require 'rubytter/xauth'
-require 'rubytter/xauth_rubytter'
 
 class Rubytter
   VERSION = File.read(File.join(File.dirname(__FILE__), '../VERSION')).strip
