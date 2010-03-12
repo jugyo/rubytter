@@ -1,13 +1,14 @@
-
 # -*- coding: utf-8 -*-
 require 'rubygems'
 require 'json'
 require 'net/https'
 require 'cgi'
 
+require 'oauth'
+require 'rubytter/core_ext'
 require 'rubytter/connection'
 require 'rubytter/oauth_rubytter'
-require 'rubytter/core_ext'
+require 'rubytter/xauth_rubytter'
 
 class Rubytter
   VERSION = File.read(File.join(File.dirname(__FILE__), '../VERSION')).strip
@@ -26,6 +27,10 @@ class Rubytter
   def initialize(login = nil, password = nil, options = {})
     @login = login
     @password = password
+    setup(options)
+  end
+
+  def setup(options)
     @host = options[:host] || 'twitter.com'
     @header = {'User-Agent' => "Rubytter/#{VERSION} (http://github.com/jugyo/rubytter)"}
     @header.merge!(options[:header]) if options[:header]
