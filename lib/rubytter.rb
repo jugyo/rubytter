@@ -8,6 +8,7 @@ require 'oauth'
 require 'rubytter/core_ext'
 require 'rubytter/connection'
 require 'rubytter/oauth_rubytter'
+require 'rubytter/xauth'
 require 'rubytter/xauth_rubytter'
 
 class Rubytter
