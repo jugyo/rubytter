@@ -13,6 +13,7 @@ begin
     gem.authors = ["jugyo"]
     gem.files = FileList['lib/**/*.rb', 'VERSION', 'README.rdoc', 'History.txt', 'Rakefile', 'spec/**/*.rb', 'spec/**/*.json', 'examples/**/*.rb']
     gem.add_dependency("json", ">= 1.1.3")
+    gem.add_dependency("oauth", ">= 0.3.6")
     gem.add_development_dependency "rspec"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
