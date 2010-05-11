@@ -190,7 +190,7 @@ class Rubytter
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path), false)
 
-    json_data = http_request("search.#{@host}", req, nil, @connection_for_search)
+    json_data = http_request("#{@host}", req, nil, @connection_for_search)
     structize(
       json_data['results'].map do |result|
         search_result_to_hash(result)
