@@ -258,6 +258,14 @@ class Rubytter
           self[:id]
         end
 
+        def destructize(obj = self)
+          obj.inject({}) {|memo, (key, value)|
+            memo[key] =
+            (value.kind_of? obj.class) ? destructize(value) : value
+            memo
+          }
+        end
+
         def method_missing(name, *args)
           self[name]
         end
