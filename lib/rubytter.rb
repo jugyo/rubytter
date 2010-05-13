@@ -13,6 +13,9 @@ require 'rubytter/oauth_rubytter'
 class Rubytter
   VERSION = File.read(File.join(File.dirname(__FILE__), '../VERSION')).strip
 
+  HOST = 'api.twitter.com'
+  SEARCH_HOST = 'search.twitter.com'
+
   class APIError < StandardError
     attr_reader :response
     def initialize(msg, response = nil)
@@ -22,7 +25,7 @@ class Rubytter
   end
 
   attr_reader :login
-  attr_accessor :host, :header
+  attr_accessor :header
 
   def initialize(login = nil, password = nil, options = {})
     @login = login
@@ -31,7 +34,6 @@ class Rubytter
   end
 
   def setup(options)
-    @host = options[:host] || 'api.twitter.com'
     @header = {'User-Agent' => "Rubytter/#{VERSION} (http://github.com/jugyo/rubytter)"}
     @header.merge!(options[:header]) if options[:header]
     @app_name = options[:app_name]
@@ -167,21 +169,21 @@ class Rubytter
     param_str = '?' + to_param_str(params)
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path))
-    structize(http_request(@host, req))
+    structize(http_request(HOST, req))
   end
 
   def post(path, params = {})
     path += '.json'
     param_str = to_param_str(params)
     req = create_request(Net::HTTP::Post.new(path))
-    structize(http_request(@host, req, param_str))
+    structize(http_request(HOST, req, param_str))
   end
 
   def delete(path, params = {})
     path += '.json'
     param_str = to_param_str(params)
     req = create_request(Net::HTTP::Delete.new(path))
-    structize(http_request(@host, req, param_str))
+    structize(http_request(HOST, req, param_str))
   end
 
   def search(query, params = {})
@@ -190,7 +192,7 @@ class Rubytter
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path), false)
 
-    json_data = http_request("#{@host}", req, nil, @connection_for_search)
+    json_data = http_request(SEARCH_HOST, req, nil, @connection_for_search)
     structize(
       json_data['results'].map do |result|
         search_result_to_hash(result)
@@ -203,7 +205,7 @@ class Rubytter
     param_str = '?' + to_param_str(params.merge({:q => query}))
     path = path + param_str unless param_str.empty?
     req = create_request(Net::HTTP::Get.new(path))
-    structize(http_request(@host, req))
+    structize(http_request(HOST, req))
   end
 
   def search_result_to_hash(json)
