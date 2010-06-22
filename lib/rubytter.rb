@@ -22,7 +22,7 @@ class Rubytter
   end
 
   attr_reader :login
-  attr_accessor :host, :header
+  attr_accessor :host, :header, :path_prefix
 
   def initialize(login = nil, password = nil, options = {})
     @login = login
@@ -37,70 +37,71 @@ class Rubytter
     @app_name = options[:app_name]
     @connection = Connection.new(options)
     @connection_for_search = Connection.new(options.merge({:enable_ssl => false}))
+    @path_prefix = options[:path_prefix] || '/1'
   end
 
   def self.api_settings
     # method name             path for API                    http method
     "
-      update_status           /1/statuses/update                post
-      remove_status           /1/statuses/destroy/%s            delete
-      public_timeline         /1/statuses/public_timeline
-      home_timeline           /1/statuses/home_timeline
-      friends_timeline        /1/statuses/friends_timeline
-      replies                 /1/statuses/replies
-      mentions                /1/statuses/mentions
-      user_timeline           /1/statuses/user_timeline/%s
-      show                    /1/statuses/show/%s
-      friends                 /1/statuses/friends/%s
-      followers               /1/statuses/followers/%s
-      retweet                 /1/statuses/retweet/%s            post
-      retweets                /1/statuses/retweets/%s
-      retweeted_by_me         /1/statuses/retweeted_by_me
-      retweeted_to_me         /1/statuses/retweeted_to_me
-      retweets_of_me          /1/statuses/retweets_of_me
-      user                    /1/users/show/%s
-      direct_messages         /1/direct_messages
-      sent_direct_messages    /1/direct_messages/sent
-      send_direct_message     /1/direct_messages/new            post
-      remove_direct_message   /1/direct_messages/destroy/%s     delete
-      follow                  /1/friendships/create/%s          post
-      leave                   /1/friendships/destroy/%s         delete
-      friendship_exists       /1/friendships/exists
-      followers_ids           /1/followers/ids/%s
-      friends_ids             /1/friends/ids/%s
-      favorites               /1/favorites/%s
-      favorite                /1/favorites/create/%s            post
-      remove_favorite         /1/favorites/destroy/%s           delete
-      verify_credentials      /1/account/verify_credentials     get
-      end_session             /1/account/end_session            post
-      update_delivery_device  /1/account/update_delivery_device post
-      update_profile_colors   /1/account/update_profile_colors  post
-      limit_status            /1/account/rate_limit_status
-      update_profile          /1/account/update_profile         post
-      enable_notification     /1/notifications/follow/%s        post
-      disable_notification    /1/notifications/leave/%s         post
-      block                   /1/blocks/create/%s               post
-      unblock                 /1/blocks/destroy/%s              delete
-      block_exists            /1/blocks/exists/%s               get
-      blocking                /1/blocks/blocking                get
-      blocking_ids            /1/blocks/blocking/ids            get
-      saved_searches          /1/saved_searches                 get
-      saved_search            /1/saved_searches/show/%s         get
-      create_saved_search     /1/saved_searches/create          post
-      remove_saved_search     /1/saved_searches/destroy/%s      delete
-      create_list             /1/:user/lists                    post
-      update_list             /1/:user/lists/%s                 put
-      delete_list             /1/:user/lists/%s                 delete
-      lists                   /1/%s/lists
-      lists_followers         /1/%s/lists/memberships
-      list_statuses           /1/%s/lists/%s/statuses
-      list                    /1/%s/lists/%s
-      list_members            /1/%s/%s/members
-      add_member_to_list      /1/:user/%s/members               post
-      remove_member_from_list /1/:user/%s/members               delete
-      list_following          /1/%s/%s/subscribers
-      follow_list             /1/%s/%s/subscribers              post
-      remove_list             /1/%s/%s/subscribers              delete
+      update_status           /statuses/update                post
+      remove_status           /statuses/destroy/%s            delete
+      public_timeline         /statuses/public_timeline
+      home_timeline           /statuses/home_timeline
+      friends_timeline        /statuses/friends_timeline
+      replies                 /statuses/replies
+      mentions                /statuses/mentions
+      user_timeline           /statuses/user_timeline/%s
+      show                    /statuses/show/%s
+      friends                 /statuses/friends/%s
+      followers               /statuses/followers/%s
+      retweet                 /statuses/retweet/%s            post
+      retweets                /statuses/retweets/%s
+      retweeted_by_me         /statuses/retweeted_by_me
+      retweeted_to_me         /statuses/retweeted_to_me
+      retweets_of_me          /statuses/retweets_of_me
+      user                    /users/show/%s
+      direct_messages         /direct_messages
+      sent_direct_messages    /direct_messages/sent
+      send_direct_message     /direct_messages/new            post
+      remove_direct_message   /direct_messages/destroy/%s     delete
+      follow                  /friendships/create/%s          post
+      leave                   /friendships/destroy/%s         delete
+      friendship_exists       /friendships/exists
+      followers_ids           /followers/ids/%s
+      friends_ids             /friends/ids/%s
+      favorites               /favorites/%s
+      favorite                /favorites/create/%s            post
+      remove_favorite         /favorites/destroy/%s           delete
+      verify_credentials      /account/verify_credentials     get
+      end_session             /account/end_session            post
+      update_delivery_device  /account/update_delivery_device post
+      update_profile_colors   /account/update_profile_colors  post
+      limit_status            /account/rate_limit_status
+      update_profile          /account/update_profile         post
+      enable_notification     /notifications/follow/%s        post
+      disable_notification    /notifications/leave/%s         post
+      block                   /blocks/create/%s               post
+      unblock                 /blocks/destroy/%s              delete
+      block_exists            /blocks/exists/%s               get
+      blocking                /blocks/blocking                get
+      blocking_ids            /blocks/blocking/ids            get
+      saved_searches          /saved_searches                 get
+      saved_search            /saved_searches/show/%s         get
+      create_saved_search     /saved_searches/create          post
+      remove_saved_search     /saved_searches/destroy/%s      delete
+      create_list             /:user/lists                    post
+      update_list             /:user/lists/%s                 put
+      delete_list             /:user/lists/%s                 delete
+      lists                   /%s/lists
+      lists_followers         /%s/lists/memberships
+      list_statuses           /%s/lists/%s/statuses
+      list                    /%s/lists/%s
+      list_members            /%s/%s/members
+      add_member_to_list      /:user/%s/members               post
+      remove_member_from_list /:user/%s/members               delete
+      list_following          /%s/%s/subscribers
+      follow_list             /%s/%s/subscribers              post
+      remove_list             /%s/%s/subscribers              delete
     ".strip.split("\n").map{|line| line.strip.split(/\s+/)}
   end
 
@@ -166,21 +167,21 @@ class Rubytter
     path += '.json'
     param_str = '?' + to_param_str(params)
     path = path + param_str unless param_str.empty?
-    req = create_request(Net::HTTP::Get.new(path))
+    req = create_request(Net::HTTP::Get.new(path_prefix + path))
     structize(http_request(@host, req))
   end
 
   def post(path, params = {})
     path += '.json'
     param_str = to_param_str(params)
-    req = create_request(Net::HTTP::Post.new(path))
+    req = create_request(Net::HTTP::Post.new(path_prefix + path))
     structize(http_request(@host, req, param_str))
   end
 
   def delete(path, params = {})
     path += '.json'
     param_str = to_param_str(params)
-    req = create_request(Net::HTTP::Delete.new(path))
+    req = create_request(Net::HTTP::Delete.new(path_prefix + path))
     structize(http_request(@host, req, param_str))
   end
 
@@ -188,7 +189,7 @@ class Rubytter
     path = '/search.json'
     param_str = '?' + to_param_str(params.merge({:q => query}))
     path = path + param_str unless param_str.empty?
-    req = create_request(Net::HTTP::Get.new(path), false)
+    req = create_request(Net::HTTP::Get.new(path_prefix + path), false)
 
     json_data = http_request("#{@host}", req, nil, @connection_for_search)
     structize(
@@ -199,10 +200,10 @@ class Rubytter
   end
 
   def search_user(query, params = {})
-    path = '/1/users/search.json'
+    path = '/users/search.json'
     param_str = '?' + to_param_str(params.merge({:q => query}))
     path = path + param_str unless param_str.empty?
-    req = create_request(Net::HTTP::Get.new(path))
+    req = create_request(Net::HTTP::Get.new(path_prefix + path))
     structize(http_request(@host, req))
   end
 

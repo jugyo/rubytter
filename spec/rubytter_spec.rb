@@ -20,87 +20,87 @@ class Rubytter
 
     it 'should get or post' do
       # TODO: split specs
-      @rubytter.should_receive(:get).with('/1/statuses/replies', {})
+      @rubytter.should_receive(:get).with('/statuses/replies', {})
       @rubytter.replies
 
-      @rubytter.should_receive(:get).with('/1/statuses/replies', {:page => 2})
+      @rubytter.should_receive(:get).with('/statuses/replies', {:page => 2})
       @rubytter.replies(:page => 2)
 
-      @rubytter.should_receive(:get).with('/1/statuses/user_timeline/1', {})
+      @rubytter.should_receive(:get).with('/statuses/user_timeline/1', {})
       @rubytter.user_timeline(1)
 
-      @rubytter.should_receive(:get).with('/1/users/show/1', {})
+      @rubytter.should_receive(:get).with('/users/show/1', {})
       @rubytter.user(1)
 
-      @rubytter.should_receive(:delete).with('/1/statuses/destroy/1', {})
+      @rubytter.should_receive(:delete).with('/statuses/destroy/1', {})
       @rubytter.remove_status(1)
     end
 
     # direct_messages
 
     it 'should respond to direct_messages' do
-      @rubytter.should_receive(:get).with('/1/direct_messages', {})
+      @rubytter.should_receive(:get).with('/direct_messages', {})
       @rubytter.direct_messages()
     end
 
     it 'should respond to sent_direct_messages' do
-      @rubytter.should_receive(:get).with('/1/direct_messages/sent', {})
+      @rubytter.should_receive(:get).with('/direct_messages/sent', {})
       @rubytter.sent_direct_messages()
     end
 
     it 'should respond to send_direct_message' do
-      @rubytter.should_receive(:post).with('/1/direct_messages/new', {})
+      @rubytter.should_receive(:post).with('/direct_messages/new', {})
       @rubytter.send_direct_message()
     end
 
     it 'should respond to destroy_direct_message' do
-      @rubytter.should_receive(:delete).with('/1/direct_messages/destroy/1', {})
+      @rubytter.should_receive(:delete).with('/direct_messages/destroy/1', {})
       @rubytter.remove_direct_message(1)
     end
 
     it 'should respond to direct_message' do
-      @rubytter.should_receive(:post).with('/1/direct_messages/new', {:user => 'test', :text => 'aaaaaaaaaaaaa'})
+      @rubytter.should_receive(:post).with('/direct_messages/new', {:user => 'test', :text => 'aaaaaaaaaaaaa'})
       @rubytter.direct_message('test', 'aaaaaaaaaaaaa')
     end
 
     # statuses
 
     it 'should respond to update' do
-      @rubytter.should_receive(:post).with('/1/statuses/update', {:status => 'test'})
+      @rubytter.should_receive(:post).with('/statuses/update', {:status => 'test'})
       @rubytter.update('test')
     end
 
     it 'should respond to update_status' do
-      @rubytter.should_receive(:post).with('/1/statuses/update', {:status => 'test'})
+      @rubytter.should_receive(:post).with('/statuses/update', {:status => 'test'})
       @rubytter.update_status(:status => 'test')
     end
 
     # friendship
 
     it 'should respond to follow' do
-      @rubytter.should_receive(:post).with('/1/friendships/create/test', {})
+      @rubytter.should_receive(:post).with('/friendships/create/test', {})
       @rubytter.follow('test')
     end
 
     it 'should respond to leave' do
-      @rubytter.should_receive(:delete).with('/1/friendships/destroy/test', {})
+      @rubytter.should_receive(:delete).with('/friendships/destroy/test', {})
       @rubytter.leave('test')
     end
 
     it 'should respond to friendship_exists' do
-      @rubytter.should_receive(:get).with('/1/friendships/exists', {:user_a => 'a', :user_b => 'b'})
+      @rubytter.should_receive(:get).with('/friendships/exists', {:user_a => 'a', :user_b => 'b'})
       @rubytter.friendship_exists(:user_a => 'a', :user_b => 'b')
     end
 
     # Social Graph Methods
 
     it 'should respond to followers_ids' do
-      @rubytter.should_receive(:get).with('/1/friends/ids/test', {})
+      @rubytter.should_receive(:get).with('/friends/ids/test', {})
       @rubytter.friends_ids('test')
     end
 
     it 'should respond to followers_ids' do
-      @rubytter.should_receive(:get).with('/1/followers/ids/test', {})
+      @rubytter.should_receive(:get).with('/followers/ids/test', {})
       @rubytter.followers_ids('test')
     end
 
@@ -111,7 +111,7 @@ class Rubytter
 
     it 'should respond to search (1)' do
       @rubytter.should_receive(:http_request) do |host, req, param_str|
-        req.path.should == '/search.json?q=test'
+        req.path.should == '/1/search.json?q=test'
         host.should == 'api.twitter.com'
         {'results' => []}
       end
@@ -327,32 +327,32 @@ class Rubytter
     end
 
     it 'should POST /:user/list to create list' do
-      @rubytter.should_receive(:post).with("/1/test/lists", {:name=>"foo"})
+      @rubytter.should_receive(:post).with("/test/lists", {:name=>"foo"})
       @rubytter.create_list('foo')
     end
 
     it 'should PUT /:user/list to update list' do
-      @rubytter.should_receive(:put).with("/1/test/lists/foo", {})
+      @rubytter.should_receive(:put).with("/test/lists/foo", {})
       @rubytter.update_list('foo')
     end
 
     it 'should DELETE /:user/list to delete list' do
-      @rubytter.should_receive(:delete).with("/1/test/lists/foo", {})
+      @rubytter.should_receive(:delete).with("/test/lists/foo", {})
       @rubytter.delete_list('foo')
     end
 
     it 'should GET lists for specified user' do
-      @rubytter.should_receive(:get).with("/1/jugyo/lists", {})
+      @rubytter.should_receive(:get).with("/jugyo/lists", {})
       @rubytter.lists('jugyo')
     end
 
     it 'should add member to list' do
-      @rubytter.should_receive(:post).with("/1/test/foo/members", {:id=>"jugyo"})
+      @rubytter.should_receive(:post).with("/test/foo/members", {:id=>"jugyo"})
       @rubytter.add_member_to_list('foo', 'jugyo')
     end
 
     it 'should remove member to list' do
-      @rubytter.should_receive(:delete).with("/1/test/foo/members", {:id=>"jugyo"})
+      @rubytter.should_receive(:delete).with("/test/foo/members", {:id=>"jugyo"})
       @rubytter.remove_member_from_list('foo', 'jugyo')
     end
 
@@ -363,7 +363,7 @@ class Rubytter
       rubytter = OAuthRubytter.new(access_token)
       response = simple_mock(:body => '{}', :code => '200')
       access_token.should_receive(:post).with(
-        "/1/statuses/update.json",
+        "/statuses/update.json",
         {'status' => 'test'},
         {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
       ).and_return(response)
@@ -375,7 +375,7 @@ class Rubytter
       rubytter = OAuthRubytter.new(access_token)
       response = simple_mock(:body => '{}', :code => '200')
       access_token.should_receive(:get).with(
-        '/1/statuses/friends_timeline.json',
+        '/statuses/friends_timeline.json',
         {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
       ).and_return(response)
       rubytter.friends_timeline
@@ -386,7 +386,7 @@ class Rubytter
       rubytter = OAuthRubytter.new(access_token)
       response = simple_mock(:body => '{}', :code => '200')
       access_token.should_receive(:get).with(
-        '/1/statuses/friends_timeline.json?page=2',
+        '/statuses/friends_timeline.json?page=2',
         {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
       ).and_return(response)
       rubytter.friends_timeline(:page => 2)
