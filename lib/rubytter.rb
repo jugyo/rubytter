@@ -258,10 +258,9 @@ class Rubytter
           self[:id]
         end
 
-        def destructize(obj = self)
+        def to_hash(obj = self)
           obj.inject({}) {|memo, (key, value)|
-            memo[key] =
-            (value.kind_of? obj.class) ? destructize(value) : value
+            memo[key] = (value.kind_of? obj.class) ? to_hash(value) : value
             memo
           }
         end

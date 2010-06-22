@@ -193,6 +193,17 @@ class Rubytter
       struct.regex.should == nil
     end
 
+    it 'should convert to hash using to_hash' do
+      hash = {
+        :a => 'a',
+        'b' => 1,
+        :c => {:a => 1, :b => 2}
+      }
+      struct = @rubytter.structize(hash)
+      new_hash = struct.to_hash
+      new_hash.should == {:a=>"a", :b=>1, :c=>{:a=>1, :b=>2}}
+    end
+
     it 'should create struct from json(Array)' do
       data = [
         {"status" => {"text" => "foo", "user" => {"screen_name" => "jugyo_foo"}}},
