@@ -289,8 +289,8 @@ class Rubytter
         'text' => 'foo foo bar bar',
         'created_at' => 'Sat, 21 Mar 2009 09:48:20 +0000',
         'source' => '&lt;a href=&quot;http:\/\/twitter.com\/&quot;&gt;web&lt;\/a&gt;',
-        'to_usre_id' => '20660692',
-        'to_usre' => 'jugyo_test',
+        'to_user_id' => '20660692',
+        'to_user' => 'jugyo_test',
         'from_user_id' => '3748631',
         'from_user' => 'jugyo',
         'profile_image_url' => 'http://s3.amazonaws.com/twitter_production/profile_images/63467667/megane2_normal.png'

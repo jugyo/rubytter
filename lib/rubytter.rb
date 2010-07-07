@@ -213,8 +213,8 @@ class Rubytter
       'text' => json['text'],
       'source' => json['source'],
       'created_at' => json['created_at'],
-      'in_reply_to_user_id' => json['to_usre_id'],
-      'in_reply_to_screen_name' => json['to_usre'],
+      'in_reply_to_user_id' => json['to_user_id'],
+      'in_reply_to_screen_name' => json['to_user'],
       'in_reply_to_status_id' => nil,
       'user' => {
         'id' => json['from_user_id'],
