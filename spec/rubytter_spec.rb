@@ -111,8 +111,8 @@ class Rubytter
 
     it 'should respond to search (1)' do
       @rubytter.should_receive(:http_request) do |host, req, param_str|
-        req.path.should == '/1/search.json?q=test'
-        host.should == 'api.twitter.com'
+        req.path.should == '/search.json?q=test'
+        host.should == 'search.twitter.com'
         {'results' => []}
       end
       @rubytter.search('test')
@@ -414,7 +414,7 @@ class Rubytter
         connection_for_search.enable_ssl.should == false
 
         @ssl_rubytter.should_receive(:http_request).
-          with('api.twitter.com', anything, nil, connection_for_search).
+          with('search.twitter.com', anything, nil, connection_for_search).
           and_return({'results' => []})
         @ssl_rubytter.search('rubytter')
       end

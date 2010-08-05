@@ -32,6 +32,7 @@ class Rubytter
 
   def setup(options)
     @host = options[:host] || 'api.twitter.com'
+    @search_host = options[:search_host] || 'search.twitter.com'
     @header = {'User-Agent' => "Rubytter/#{VERSION} (http://github.com/jugyo/rubytter)"}
     @header.merge!(options[:header]) if options[:header]
     @app_name = options[:app_name]
@@ -189,9 +190,9 @@ class Rubytter
     path = '/search.json'
     param_str = '?' + to_param_str(params.merge({:q => query}))
     path = path + param_str unless param_str.empty?
-    req = create_request(Net::HTTP::Get.new(path_prefix + path), false)
+    req = create_request(Net::HTTP::Get.new(path), false)
 
-    json_data = http_request("#{@host}", req, nil, @connection_for_search)
+    json_data = http_request("#{@search_host}", req, nil, @connection_for_search)
     structize(
       json_data['results'].map do |result|
         search_result_to_hash(result)
