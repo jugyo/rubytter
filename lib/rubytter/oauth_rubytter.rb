@@ -40,4 +40,11 @@ class OAuthRubytter < Rubytter
       raise APIError.new(json_data['error'], res)
     end
   end
+
+  private
+  def get_login
+    # FIXME
+    # How do I get my screen_name from access_token?
+    user_timeline('').first.user.screen_name
+  end
 end

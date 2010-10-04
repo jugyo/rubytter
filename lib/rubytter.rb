@@ -112,6 +112,7 @@ class Rubytter
     if /%s/ =~ path
       eval <<-EOS
         def #{method}(*args)
+          @login = get_login if !login && '#{path}' =~ /:user/ && respond_to?(:get_login, true)
           path = login ? '#{path}'.gsub(':user', login) :'#{path}'
           params = args.last.kind_of?(Hash) ? args.pop : {}
           path = path % args
@@ -122,6 +123,7 @@ class Rubytter
     else
       eval <<-EOS
         def #{method}(params = {})
+          @login = get_login if !login && '#{path}' =~ /:user/ && respond_to?(:get_login, true)
           path = login ? '#{path}'.gsub(':user', login) :'#{path}'
           #{http_method}(path, params)
         end
