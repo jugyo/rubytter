@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # must use oauth library.
 class OAuthRubytter < Rubytter
+  attr_accessor :login
+
   # access_token: must be instance of OAuth::AccessToken
   def initialize(access_token, options = {})
     super(nil, nil, options)
@@ -39,12 +41,5 @@ class OAuthRubytter < Rubytter
     else
       raise APIError.new(json_data['error'], res)
     end
-  end
-
-  private
-  def get_login
-    # FIXME
-    # How do I get my screen_name from access_token?
-    user_timeline('').first.user.screen_name
   end
 end

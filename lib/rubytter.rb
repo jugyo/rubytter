@@ -21,6 +21,12 @@ class Rubytter
     end
   end
 
+  class NameUnSetError < StandardError
+    def initialize(method_name)
+      super("first, you must set @login when #{method_name} use")
+    end
+  end
+
   attr_reader :login
   attr_accessor :host, :header, :path_prefix
 
@@ -112,7 +118,7 @@ class Rubytter
     if /%s/ =~ path
       eval <<-EOS
         def #{method}(*args)
-          @login = get_login if !login && '#{path}' =~ /:user/ && respond_to?(:get_login, true)
+          raise NameUnSetError.new(__method__) if !login && '#{path}' =~ /:user/
           path = login ? '#{path}'.gsub(':user', login) :'#{path}'
           params = args.last.kind_of?(Hash) ? args.pop : {}
           path = path % args
@@ -123,7 +129,7 @@ class Rubytter
     else
       eval <<-EOS
         def #{method}(params = {})
-          @login = get_login if !login && '#{path}' =~ /:user/ && respond_to?(:get_login, true)
+          raise NameUnSetError.new(__method__) if !login && '#{path}' =~ /:user/
           path = login ? '#{path}'.gsub(':user', login) :'#{path}'
           #{http_method}(path, params)
         end

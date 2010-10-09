@@ -3,11 +3,11 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 class OAuthRubytter
-  describe "OAuthRubytter" do
+  describe "OAuthRubytter with login" do
     before do
       access_token = Object.new
       @rubytter = OAuthRubytter.new(access_token)
-      @rubytter.stub!(:get_login).and_return('test')
+      @rubytter.login = 'test'
     end
 
     describe 'path include :user' do
@@ -34,6 +34,20 @@ class OAuthRubytter
       it 'should remove member to list' do
         @rubytter.should_receive(:delete).with("/test/foo/members", {:id=>"jugyo"})
         @rubytter.remove_member_from_list('foo', 'jugyo')
+      end
+    end
+  end
+  describe "OAuthRubytter without login" do
+    before do
+      access_token = Object.new
+      @rubytter = OAuthRubytter.new(access_token)
+    end
+
+    describe 'path include :user' do
+      it 'should POST /:user/list to create list' do
+        lambda {
+          @rubytter.create_list('foo')
+        }.should raise_error(NameUnSetError, "first, you must set @login when create_list use")
       end
     end
   end
