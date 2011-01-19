@@ -363,7 +363,7 @@ class Rubytter
       rubytter = OAuthRubytter.new(access_token)
       response = simple_mock(:body => '{}', :code => '200')
       access_token.should_receive(:post).with(
-        "/statuses/update.json",
+        "/1/statuses/update.json",
         {'status' => 'test'},
         {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
       ).and_return(response)
@@ -375,7 +375,7 @@ class Rubytter
       rubytter = OAuthRubytter.new(access_token)
       response = simple_mock(:body => '{}', :code => '200')
       access_token.should_receive(:get).with(
-        '/statuses/friends_timeline.json',
+        '/1/statuses/friends_timeline.json',
         {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
       ).and_return(response)
       rubytter.friends_timeline
@@ -386,7 +386,7 @@ class Rubytter
       rubytter = OAuthRubytter.new(access_token)
       response = simple_mock(:body => '{}', :code => '200')
       access_token.should_receive(:get).with(
-        '/statuses/friends_timeline.json?page=2',
+        '/1/statuses/friends_timeline.json?page=2',
         {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
       ).and_return(response)
       rubytter.friends_timeline(:page => 2)

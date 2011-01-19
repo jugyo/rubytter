@@ -8,24 +8,24 @@ class OAuthRubytter < Rubytter
   end
 
   def get(path, params = {})
-    path += '.json'
+    path = path_prefix + path + '.json'
     param_str = to_param_str(params)
     path = path + '?' + param_str unless param_str.empty?
     parse_response(@access_token.get(path, @header))
   end
 
   def post(path, params = {})
-    path += '.json'
+    path = path_prefix + path + '.json'
     parse_response(@access_token.post(path, params.stringify_keys, @header))
   end
 
   def put(path, params = {})
-    path += '.json'
+    path = path_prefix + path + '.json'
     parse_response(@access_token.put(path, params.stringify_keys, @header))
   end
 
   def delete(path, params = {})
-    path += '.json'
+    path = path_prefix + path + '.json'
     param_str = to_param_str(params)
     path = path + '?' + param_str unless param_str.empty?
     parse_response(@access_token.delete(path, @header))
