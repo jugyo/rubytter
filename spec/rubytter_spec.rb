@@ -328,17 +328,17 @@ class Rubytter
 
     it 'should POST /:user/list to create list' do
       @rubytter.should_receive(:post).with("/test/lists", {:name=>"foo"})
-      @rubytter.create_list('foo')
+      @rubytter.create_list('test', 'foo')
     end
 
     it 'should PUT /:user/list to update list' do
       @rubytter.should_receive(:put).with("/test/lists/foo", {})
-      @rubytter.update_list('foo')
+      @rubytter.update_list('test', 'foo')
     end
 
     it 'should DELETE /:user/list to delete list' do
       @rubytter.should_receive(:delete).with("/test/lists/foo", {})
-      @rubytter.delete_list('foo')
+      @rubytter.delete_list('test', 'foo')
     end
 
     it 'should GET lists for specified user' do
@@ -348,12 +348,12 @@ class Rubytter
 
     it 'should add member to list' do
       @rubytter.should_receive(:post).with("/test/foo/members", {:id=>"jugyo"})
-      @rubytter.add_member_to_list('foo', 'jugyo')
+      @rubytter.add_member_to_list('test', 'foo', 'jugyo')
     end
 
     it 'should remove member to list' do
       @rubytter.should_receive(:delete).with("/test/foo/members", {:id=>"jugyo"})
-      @rubytter.remove_member_from_list('foo', 'jugyo')
+      @rubytter.remove_member_from_list('test', 'foo', 'jugyo')
     end
 
     # TODO: You should write more specs for Lists API...

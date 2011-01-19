@@ -11,7 +11,7 @@ end
 client = Rubytter.new(ARGV[0], ARGV[1])
 
 puts 'create list...'
-list = client.create_list('test')
+list = client.create_list(ARGV[0], 'test')
 puts "  => : #{list.full_name}"
 
 puts 'get lists..'
@@ -19,17 +19,17 @@ puts '  =>' + client.lists(ARGV[0]).lists.map{|i| i.slug}.inspect
 
 puts 'add member to list...'
 add_user = client.user('termtter')
-client.add_member_to_list(list.slug, add_user.id)
+client.add_member_to_list(ARGV[0], list.slug, add_user.id)
 members = client.list_members(ARGV[0], list.slug)
 puts '  =>' + members.users.map{|i| i.screen_name}.inspect
 
 puts 'remove member from list...'
-client.remove_member_from_list(list.slug, add_user.id)
+client.remove_member_from_list(ARGV[0], list.slug, add_user.id)
 members = client.list_members(ARGV[0], list.slug)
 puts '  =>' + members.users.map{|i| i.screen_name}.inspect
 
 puts 'delete list...'
-client.delete_list(list.slug)
+client.delete_list(ARGV[0], list.slug)
 
 puts 'get lists..'
 puts '  =>' + client.lists(ARGV[0]).lists.map{|i| i.slug}.inspect

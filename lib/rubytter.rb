@@ -90,16 +90,16 @@ class Rubytter
       saved_search            /saved_searches/show/%s         get
       create_saved_search     /saved_searches/create          post
       remove_saved_search     /saved_searches/destroy/%s      delete
-      create_list             /:user/lists                    post
-      update_list             /:user/lists/%s                 put
-      delete_list             /:user/lists/%s                 delete
+      create_list             /%s/lists                       post
+      update_list             /%s/lists/%s                    put
+      delete_list             /%s/lists/%s                    delete
+      list                    /%s/lists/%s
       lists                   /%s/lists
       lists_followers         /%s/lists/memberships
       list_statuses           /%s/lists/%s/statuses
-      list                    /%s/lists/%s
       list_members            /%s/%s/members
-      add_member_to_list      /:user/%s/members               post
-      remove_member_from_list /:user/%s/members               delete
+      add_member_to_list      /%s/%s/members                  post
+      remove_member_from_list /%s/%s/members                  delete
       list_following          /%s/%s/subscribers
       follow_list             /%s/%s/subscribers              post
       remove_list             /%s/%s/subscribers              delete
@@ -112,9 +112,8 @@ class Rubytter
     if /%s/ =~ path
       eval <<-EOS
         def #{method}(*args)
-          path = login ? '#{path}'.gsub(':user', login) :'#{path}'
           params = args.last.kind_of?(Hash) ? args.pop : {}
-          path = path % args
+          path = '#{path}' % args
           path.sub!(/\\/\\z/, '')
           #{http_method}(path, params)
         end
@@ -122,26 +121,25 @@ class Rubytter
     else
       eval <<-EOS
         def #{method}(params = {})
-          path = login ? '#{path}'.gsub(':user', login) :'#{path}'
-          #{http_method}(path, params)
+          #{http_method}('#{path}', params)
         end
       EOS
     end
   end
 
   alias_method :__create_list, :create_list
-  def create_list(name, params = {})
-    __create_list(params.merge({:name => name}))
+  def create_list(owner, list_slug, params = {})
+    __create_list(owner, params.merge({:name => list_slug}))
   end
 
   alias_method :__add_member_to_list, :add_member_to_list
-  def add_member_to_list(list_slug, user_id, params = {})
-    __add_member_to_list(list_slug, params.merge({:id => user_id}))
+  def add_member_to_list(owner, list_slug, user_id, params = {})
+    __add_member_to_list(owner, list_slug, params.merge({:id => user_id}))
   end
 
   alias_method :__remove_member_from_list, :remove_member_from_list
-  def remove_member_from_list(list_slug, user_id, params = {})
-    __remove_member_from_list(list_slug, params.merge({:id => user_id}))
+  def remove_member_from_list(owner, list_slug, user_id, params = {})
+    __remove_member_from_list(owner, list_slug, params.merge({:id => user_id}))
   end
 
   alias_method :__update_status, :update_status

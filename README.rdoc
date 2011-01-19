@@ -58,18 +58,18 @@ Rubytter is a simple twitter library.
 - /saved_searches/show/%s
 - /saved_searches/create
 - /saved_searches/destroy/%s
-- /:user/lists (create)
-- /:user/lists/%s (update)
-- /:user/lists/%s (delete)
-- /:user/lists
-- /:user/lists/memberships
-- /:user/lists/%s/statuses
-- /:user/lists/%s
+- /%s/lists (create)
+- /%s/lists/%s (update)
+- /%s/lists/%s (delete)
+- /%s/lists/%s
+- /%s/lists
+- /%s/lists/memberships
+- /%s/lists/%s/statuses
+- /%s/%s/members (create)
+- /%s/%s/members (delete)
 - /%s/%s/members
-- /:user/%s/members
-- /:user/%s/members
-- /%s/%s/subscribers
-- /%s/%s/subscribers
+- /%s/%s/subscribers (create)
+- /%s/%s/subscribers (delete)
 - /%s/%s/subscribers
 - (search.twitter.com)/search
 - (api.twitter.com)/1/users/search
