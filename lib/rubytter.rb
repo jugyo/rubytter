@@ -240,9 +240,10 @@ class Rubytter
         end
 
         def symbolize_keys!
-          each do |key, value|
+          dup.each do |key, value|
             self[(key.to_sym rescue key) || key] = value
           end
+          self
         end
       end
 
