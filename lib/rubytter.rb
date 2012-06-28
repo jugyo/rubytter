@@ -39,7 +39,8 @@ class Rubytter
       remove_status           /statuses/destroy/%s            delete
       public_timeline         /statuses/public_timeline
       friends_timeline        /statuses/friends_timeline
-      replies                 /statuses/replies
+      replies                 /statuses/mentions
+      mentions                /statuses/mentions
       mentions                /statuses/mentions
       user_timeline           /statuses/user_timeline/%s
       show                    /statuses/show/%s

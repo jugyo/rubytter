@@ -20,11 +20,17 @@ class Rubytter
 
     it 'should get or post' do
       # TODO: split specs
-      @rubytter.should_receive(:get).with('/statuses/replies', {})
+      @rubytter.should_receive(:get).with('/statuses/mentions', {})
       @rubytter.replies
 
-      @rubytter.should_receive(:get).with('/statuses/replies', {:page => 2})
+      @rubytter.should_receive(:get).with('/statuses/mentions', {:page => 2})
       @rubytter.replies(:page => 2)
+
+      @rubytter.should_receive(:get).with('/statuses/mentions', {})
+      @rubytter.mentions
+
+      @rubytter.should_receive(:get).with('/statuses/mentions', {:page => 2})
+      @rubytter.mentions(:page => 2)
 
       @rubytter.should_receive(:get).with('/statuses/user_timeline/1', {})
       @rubytter.user_timeline(1)
