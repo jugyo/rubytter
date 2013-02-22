@@ -38,7 +38,7 @@ class Rubytter
     @app_name = options[:app_name]
     @connection = Connection.new(options)
     @connection_for_search = Connection.new(options.merge({:enable_ssl => false}))
-    @path_prefix = options[:path_prefix] || '/1'
+    @path_prefix = options[:path_prefix] || '/1.1'
   end
 
   def self.api_settings
