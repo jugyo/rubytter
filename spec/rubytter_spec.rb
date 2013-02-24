@@ -26,13 +26,13 @@ class Rubytter
       @rubytter.should_receive(:get).with('/statuses/replies', {:page => 2})
       @rubytter.replies(:page => 2)
 
-      @rubytter.should_receive(:get).with('/statuses/user_timeline/1', {})
-      @rubytter.user_timeline(1)
+      @rubytter.should_receive(:get).with('/statuses/user_timeline', {:id => 1})
+      @rubytter.user_timeline(:id => 1)
 
-      @rubytter.should_receive(:get).with('/users/show/1', {})
-      @rubytter.user(1)
+      @rubytter.should_receive(:get).with('/users/show', {:id => 1})
+      @rubytter.user(:id => 1)
 
-      @rubytter.should_receive(:delete).with('/statuses/destroy/1', {})
+      @rubytter.should_receive(:post).with('/statuses/destroy/1', {})
       @rubytter.remove_status(1)
     end
 
@@ -54,8 +54,8 @@ class Rubytter
     end
 
     it 'should respond to destroy_direct_message' do
-      @rubytter.should_receive(:delete).with('/direct_messages/destroy/1', {})
-      @rubytter.remove_direct_message(1)
+      @rubytter.should_receive(:post).with('/direct_messages/destroy', {:id => 1})
+      @rubytter.remove_direct_message(:id => 1)
     end
 
     it 'should respond to direct_message' do
@@ -78,30 +78,30 @@ class Rubytter
     # friendship
 
     it 'should respond to follow' do
-      @rubytter.should_receive(:post).with('/friendships/create/test', {})
-      @rubytter.follow('test')
+      @rubytter.should_receive(:post).with('/friendships/create', {:screen_name => 'test'})
+      @rubytter.follow(:screen_name => 'test')
     end
 
     it 'should respond to leave' do
-      @rubytter.should_receive(:delete).with('/friendships/destroy/test', {})
-      @rubytter.leave('test')
+      @rubytter.should_receive(:post).with('/friendships/destroy', {:screen_name => 'test'})
+      @rubytter.leave(:screen_name => 'test')
     end
 
     it 'should respond to friendship_exists' do
-      @rubytter.should_receive(:get).with('/friendships/exists', {:user_a => 'a', :user_b => 'b'})
-      @rubytter.friendship_exists(:user_a => 'a', :user_b => 'b')
+      @rubytter.should_receive(:get).with('/friendships/show', {:source_screen_name => 'a', :target_screen_name => 'b'})
+      @rubytter.friendship_exists(:source_screen_name => 'a', :target_screen_name => 'b')
     end
 
     # Social Graph Methods
 
     it 'should respond to followers_ids' do
-      @rubytter.should_receive(:get).with('/friends/ids/test', {})
-      @rubytter.friends_ids('test')
+      @rubytter.should_receive(:get).with('/friends/ids', {:screen_name => 'test'})
+      @rubytter.friends_ids(:screen_name => 'test')
     end
 
     it 'should respond to followers_ids' do
-      @rubytter.should_receive(:get).with('/followers/ids/test', {})
-      @rubytter.followers_ids('test')
+      @rubytter.should_receive(:get).with('/followers/ids', {:screen_name => 'test'})
+      @rubytter.followers_ids(:screen_name => 'test')
     end
 
     it 'should respond to http_request' do
@@ -326,34 +326,34 @@ class Rubytter
       status.user.profile_image_url.should == "http://s3.amazonaws.com/twitter_production/profile_images/63467667/megane2_normal.png"
     end
 
-    it 'should POST /:user/list to create list' do
-      @rubytter.should_receive(:post).with("/test/lists", {:name=>"foo"})
-      @rubytter.create_list('test', 'foo')
+    it 'should POST /lists/create to create list' do
+      @rubytter.should_receive(:post).with("/lists/create", {:name=>"foo"})
+      @rubytter.create_list(:name => 'foo')
     end
 
-    it 'should PUT /:user/list to update list' do
-      @rubytter.should_receive(:put).with("/test/lists/foo", {})
-      @rubytter.update_list('test', 'foo')
+    it 'should POST /lists/update to update list' do
+      @rubytter.should_receive(:post).with("/lists/update", {:slug => 'foo'})
+      @rubytter.update_list(:slug => 'foo')
     end
 
-    it 'should DELETE /:user/list to delete list' do
-      @rubytter.should_receive(:delete).with("/test/lists/foo", {})
-      @rubytter.delete_list('test', 'foo')
+    it 'should POST /lists/destroy to delete list' do
+      @rubytter.should_receive(:post).with("/lists/destroy", {:slug => 'foo'})
+      @rubytter.delete_list(:slug => 'foo')
     end
 
     it 'should GET lists for specified user' do
-      @rubytter.should_receive(:get).with("/jugyo/lists", {})
-      @rubytter.lists('jugyo')
+      @rubytter.should_receive(:get).with("/lists/list", {:screen_name => 'jugyo'})
+      @rubytter.lists(:screen_name => 'jugyo')
     end
 
     it 'should add member to list' do
-      @rubytter.should_receive(:post).with("/test/foo/members", {:id=>"jugyo"})
-      @rubytter.add_member_to_list('test', 'foo', 'jugyo')
+      @rubytter.should_receive(:post).with("/lists/members/create", {:slug => 'foo', :screen_name => 'jugyo'})
+      @rubytter.add_member_to_list(:slug => 'foo', :screen_name => 'jugyo')
     end
 
     it 'should remove member to list' do
-      @rubytter.should_receive(:delete).with("/test/foo/members", {:id=>"jugyo"})
-      @rubytter.remove_member_from_list('test', 'foo', 'jugyo')
+      @rubytter.should_receive(:post).with("/lists/members/destroy", {:slug => 'foo', :screen_name => 'jugyo'})
+      @rubytter.remove_member_from_list(:slug => 'foo', :screen_name => 'jugyo')
     end
 
     # TODO: You should write more specs for Lists API...
@@ -363,7 +363,7 @@ class Rubytter
       rubytter = OAuthRubytter.new(access_token)
       response = simple_mock(:body => '{}', :code => '200')
       access_token.should_receive(:post).with(
-        "/1/statuses/update.json",
+        "/1.1/statuses/update.json",
         {'status' => 'test'},
         {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
       ).and_return(response)
@@ -375,7 +375,7 @@ class Rubytter
       rubytter = OAuthRubytter.new(access_token)
       response = simple_mock(:body => '{}', :code => '200')
       access_token.should_receive(:get).with(
-        '/1/statuses/friends_timeline.json',
+        '/1.1/statuses/friends_timeline.json',
         {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
       ).and_return(response)
       rubytter.friends_timeline
@@ -386,7 +386,7 @@ class Rubytter
       rubytter = OAuthRubytter.new(access_token)
       response = simple_mock(:body => '{}', :code => '200')
       access_token.should_receive(:get).with(
-        '/1/statuses/friends_timeline.json?page=2',
+        '/1.1/statuses/friends_timeline.json?page=2',
         {"User-Agent"=>"Rubytter/#{Rubytter::VERSION} (http://github.com/jugyo/rubytter)"}
       ).and_return(response)
       rubytter.friends_timeline(:page => 2)
