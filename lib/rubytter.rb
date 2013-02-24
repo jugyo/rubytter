@@ -126,21 +126,6 @@ class Rubytter
     end
   end
 
-  alias_method :__create_list, :create_list
-  def create_list(owner, list_slug, params = {})
-    __create_list(owner, params.merge({:name => list_slug}))
-  end
-
-  alias_method :__add_member_to_list, :add_member_to_list
-  def add_member_to_list(owner, list_slug, user_id, params = {})
-    __add_member_to_list(owner, list_slug, params.merge({:id => user_id}))
-  end
-
-  alias_method :__remove_member_from_list, :remove_member_from_list
-  def remove_member_from_list(owner, list_slug, user_id, params = {})
-    __remove_member_from_list(owner, list_slug, params.merge({:id => user_id}))
-  end
-
   alias_method :__update_status, :update_status
   def update_status(params = {})
     params[:source] = @app_name if @app_name
