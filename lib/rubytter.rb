@@ -46,10 +46,10 @@ class Rubytter
     "
       update_status           /statuses/update                post
       remove_status           /statuses/destroy/%s            post
-      public_timeline         /statuses/public_timeline
+      #public_timeline         /statuses/public_timeline
       home_timeline           /statuses/home_timeline
       friends_timeline        /statuses/friends_timeline
-      replies                 /statuses/replies
+      #replies                 /statuses/replies
       mentions                /statuses/mentions_timeline
       user_timeline           /statuses/user_timeline
       show                    /statuses/show/%s
@@ -57,8 +57,8 @@ class Rubytter
       followers               /followers/list
       retweet                 /statuses/retweet/%s            post
       retweets                /statuses/retweets/%s
-      retweeted_by_me         /statuses/retweeted_by_me
-      retweeted_to_me         /statuses/retweeted_to_me
+      #retweeted_by_me         /statuses/retweeted_by_me
+      #retweeted_to_me         /statuses/retweeted_to_me
       retweets_of_me          /statuses/retweets_of_me
       user                    /users/show
       direct_messages         /direct_messages
@@ -74,13 +74,13 @@ class Rubytter
       favorite                /favorites/create               post
       remove_favorite         /favorites/destroy              post
       verify_credentials      /account/verify_credentials     get
-      end_session             /account/end_session            post
+      #end_session             /account/end_session            post
       update_delivery_device  /account/update_delivery_device post
       update_profile_colors   /account/update_profile_colors  post
       limit_status            /application/rate_limit_status
       update_profile          /account/update_profile         post
-      enable_notification     /notifications/follow/%s        post
-      disable_notification    /notifications/leave/%s         post
+      #enable_notification     /notifications/follow/%s        post
+      #disable_notification    /notifications/leave/%s         post
       block                   /blocks/create                  post
       unblock                 /blocks/destroy                 post
       blocking                /blocks/list                    get
@@ -108,7 +108,14 @@ class Rubytter
   api_settings.each do |array|
     method, path, http_method = *array
     http_method ||= 'get'
-    if /%s/ =~ path
+    method.sub!(/^#/, '') and obsoleted = true
+    if obsoleted
+      eval <<-EOS
+        def #{method}(*args)
+          raise APIError.new('#{method} is obsoleted.')
+        end
+      EOS
+    elsif /%s/ =~ path
       eval <<-EOS
         def #{method}(*args)
           params = args.last.kind_of?(Hash) ? args.pop : {}
