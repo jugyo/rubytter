@@ -50,7 +50,7 @@ class Rubytter
       home_timeline           /statuses/home_timeline
       friends_timeline        /statuses/friends_timeline
       replies                 /statuses/replies
-      mentions                /statuses/mentions
+      mentions                /statuses/mentions_timeline
       user_timeline           /statuses/user_timeline
       show                    /statuses/show/%s
       friends                 /friends/list
