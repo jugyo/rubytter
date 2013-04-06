@@ -13,18 +13,18 @@ class Rubytter
       @rubytter.user_timeline(1)
       @rubytter.should_receive(:friend_timeline)
       @rubytter.friend_timeline
-      @rubytter.should_receive(:replies).with({:page => 2})
-      @rubytter.replies(:page => 2)
+      @rubytter.should_receive(:mentions).with({:page => 2})
+      @rubytter.mentions(:page => 2)
       # more...
     end
 
     it 'should get or post' do
       # TODO: split specs
-      @rubytter.should_receive(:get).with('/statuses/replies', {})
-      @rubytter.replies
+      @rubytter.should_receive(:get).with('/statuses/mentions_timeline', {})
+      @rubytter.mentions
 
-      @rubytter.should_receive(:get).with('/statuses/replies', {:page => 2})
-      @rubytter.replies(:page => 2)
+      @rubytter.should_receive(:get).with('/statuses/mentions_timeline', {:page => 2})
+      @rubytter.mentions(:page => 2)
 
       @rubytter.should_receive(:get).with('/statuses/user_timeline', {:id => 1})
       @rubytter.user_timeline(:id => 1)
