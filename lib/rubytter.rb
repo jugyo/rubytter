@@ -38,78 +38,84 @@ class Rubytter
     @app_name = options[:app_name]
     @connection = Connection.new(options)
     @connection_for_search = Connection.new(options.merge({:enable_ssl => false}))
-    @path_prefix = options[:path_prefix] || '/1'
+    @path_prefix = options[:path_prefix] || '/1.1'
   end
 
   def self.api_settings
     # method name             path for API                    http method
     "
       update_status           /statuses/update                post
-      remove_status           /statuses/destroy/%s            delete
-      public_timeline         /statuses/public_timeline
+      remove_status           /statuses/destroy/%s            post
+      #public_timeline         /statuses/public_timeline
       home_timeline           /statuses/home_timeline
       friends_timeline        /statuses/friends_timeline
-      replies                 /statuses/replies
-      mentions                /statuses/mentions
-      user_timeline           /statuses/user_timeline/%s
+      #replies                 /statuses/replies
+      mentions                /statuses/mentions_timeline
+      user_timeline           /statuses/user_timeline
       show                    /statuses/show/%s
-      friends                 /statuses/friends/%s
-      followers               /statuses/followers/%s
+      friends                 /friends/list
+      followers               /followers/list
       retweet                 /statuses/retweet/%s            post
       retweets                /statuses/retweets/%s
-      retweeted_by_me         /statuses/retweeted_by_me
-      retweeted_to_me         /statuses/retweeted_to_me
+      #retweeted_by_me         /statuses/retweeted_by_me
+      #retweeted_to_me         /statuses/retweeted_to_me
       retweets_of_me          /statuses/retweets_of_me
-      user                    /users/show/%s
+      user                    /users/show
       direct_messages         /direct_messages
       sent_direct_messages    /direct_messages/sent
       send_direct_message     /direct_messages/new            post
-      remove_direct_message   /direct_messages/destroy/%s     delete
-      follow                  /friendships/create/%s          post
-      leave                   /friendships/destroy/%s         delete
-      friendship_exists       /friendships/exists
-      followers_ids           /followers/ids/%s
-      friends_ids             /friends/ids/%s
-      favorites               /favorites/%s
-      favorite                /favorites/create/%s            post
-      remove_favorite         /favorites/destroy/%s           delete
+      remove_direct_message   /direct_messages/destroy        post
+      follow                  /friendships/create             post
+      leave                   /friendships/destroy            post
+      friendship_exists       /friendships/show
+      followers_ids           /followers/ids
+      friends_ids             /friends/ids
+      favorites               /favorites/list
+      favorite                /favorites/create               post
+      remove_favorite         /favorites/destroy              post
       verify_credentials      /account/verify_credentials     get
-      end_session             /account/end_session            post
+      #end_session             /account/end_session            post
       update_delivery_device  /account/update_delivery_device post
       update_profile_colors   /account/update_profile_colors  post
-      limit_status            /account/rate_limit_status
+      limit_status            /application/rate_limit_status
       update_profile          /account/update_profile         post
-      enable_notification     /notifications/follow/%s        post
-      disable_notification    /notifications/leave/%s         post
-      block                   /blocks/create/%s               post
-      unblock                 /blocks/destroy/%s              delete
-      block_exists            /blocks/exists/%s               get
-      blocking                /blocks/blocking                get
-      blocking_ids            /blocks/blocking/ids            get
-      saved_searches          /saved_searches                 get
+      #enable_notification     /notifications/follow/%s        post
+      #disable_notification    /notifications/leave/%s         post
+      block                   /blocks/create                  post
+      unblock                 /blocks/destroy                 post
+      blocking                /blocks/list                    get
+      blocking_ids            /blocks/ids                     get
+      saved_searches          /saved_searches/list            get
       saved_search            /saved_searches/show/%s         get
       create_saved_search     /saved_searches/create          post
-      remove_saved_search     /saved_searches/destroy/%s      delete
-      create_list             /%s/lists                       post
-      update_list             /%s/lists/%s                    put
-      delete_list             /%s/lists/%s                    delete
-      list                    /%s/lists/%s
-      lists                   /%s/lists
-      lists_followers         /%s/lists/memberships
-      list_statuses           /%s/lists/%s/statuses
-      list_members            /%s/%s/members
-      add_member_to_list      /%s/%s/members                  post
-      remove_member_from_list /%s/%s/members                  delete
-      list_following          /%s/%s/subscribers
-      follow_list             /%s/%s/subscribers              post
-      remove_list             /%s/%s/subscribers              delete
+      remove_saved_search     /saved_searches/destroy/%s      post
+      create_list             /lists/create                   post
+      update_list             /lists/update                   post
+      delete_list             /lists/destroy                  post
+      list                    /lists/show
+      lists                   /lists/list
+      lists_followers         /lists/memberships
+      list_statuses           /lists/statuses
+      list_members            /lists/members
+      add_member_to_list      /lists/members/create           post
+      remove_member_from_list /lists/members/destroy          post
+      list_following          /lists/subscribers
+      follow_list             /lists/subscribers/create       post
+      remove_list             /lists/subscribers/destroy      post
     ".strip.split("\n").map{|line| line.strip.split(/\s+/)}
   end
 
   api_settings.each do |array|
     method, path, http_method = *array
     http_method ||= 'get'
-    if /%s/ =~ path
+    method.sub!(/^#/, '') and obsoleted = true
+    if obsoleted
+      eval <<-EOS
+        def #{method}(*args)
+          raise APIError.new('#{method} is obsoleted.')
+        end
+      EOS
+    elsif /%s/ =~ path
       eval <<-EOS
         def #{method}(*args)
           params = args.last.kind_of?(Hash) ? args.pop : {}
@@ -125,21 +131,6 @@ class Rubytter
         end
       EOS
     end
-  end
-
-  alias_method :__create_list, :create_list
-  def create_list(owner, list_slug, params = {})
-    __create_list(owner, params.merge({:name => list_slug}))
-  end
-
-  alias_method :__add_member_to_list, :add_member_to_list
-  def add_member_to_list(owner, list_slug, user_id, params = {})
-    __add_member_to_list(owner, list_slug, params.merge({:id => user_id}))
-  end
-
-  alias_method :__remove_member_from_list, :remove_member_from_list
-  def remove_member_from_list(owner, list_slug, user_id, params = {})
-    __remove_member_from_list(owner, list_slug, params.merge({:id => user_id}))
   end
 
   alias_method :__update_status, :update_status
