@@ -9,10 +9,9 @@ require 'rubytter/core_ext'
 require 'rubytter/connection'
 require 'rubytter/oauth'
 require 'rubytter/oauth_rubytter'
+require 'rubytter/version'
 
 class Rubytter
-  VERSION = File.read(File.join(File.dirname(__FILE__), '../VERSION')).strip
-
   class APIError < StandardError
     attr_reader :response
     def initialize(msg, response = nil)
