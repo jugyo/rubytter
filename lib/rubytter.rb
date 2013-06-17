@@ -36,7 +36,6 @@ class Rubytter
     @header.merge!(options[:header]) if options[:header]
     @app_name = options[:app_name]
     @connection = Connection.new(options)
-    @connection_for_search = Connection.new(options.merge({:enable_ssl => false}))
     @path_prefix = options[:path_prefix] || '/1.1'
   end
 
@@ -175,43 +174,11 @@ class Rubytter
   end
 
   def search(query, params = {})
-    path = '/search.json'
-    param_str = '?' + to_param_str(params.merge({:q => query}))
-    path = path + param_str unless param_str.empty?
-    req = create_request(Net::HTTP::Get.new(path), false)
-
-    json_data = http_request("#{@search_host}", req, nil, @connection_for_search)
-    structize(
-      json_data['results'].map do |result|
-        search_result_to_hash(result)
-      end
-    )
+    get('/search/tweets', params.merge({:q => query}))[:statuses]
   end
 
   def search_user(query, params = {})
-    path = '/users/search.json'
-    param_str = '?' + to_param_str(params.merge({:q => query}))
-    path = path + param_str unless param_str.empty?
-    req = create_request(Net::HTTP::Get.new(path_prefix + path))
-    structize(http_request(@host, req))
-  end
-
-  def search_result_to_hash(json)
-    {
-      'id' => json['id'],
-      'text' => json['text'],
-      'source' => json['source'],
-      'created_at' => json['created_at'],
-      'in_reply_to_user_id' => json['to_user_id'],
-      'in_reply_to_screen_name' => json['to_user'],
-      'in_reply_to_status_id' => nil,
-      'user' => {
-        'id' => json['from_user_id'],
-        'name' => nil,
-        'screen_name' => json['from_user'],
-        'profile_image_url' => json['profile_image_url']
-      }
-    }
+    get('/users/search', params.merge({:q => query}))
   end
 
   def http_request(host, req, param_str = nil, connection = nil)
