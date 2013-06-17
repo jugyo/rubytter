@@ -228,7 +228,7 @@ class Rubytter
     when "200"
       json_data
     else
-      raise APIError.new(json_data['error'], res)
+      raise APIError.new(json_data['errors'], res)
     end
   end
 

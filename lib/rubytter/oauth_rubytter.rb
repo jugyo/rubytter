@@ -37,7 +37,7 @@ class OAuthRubytter < Rubytter
     when "200"
       structize(json_data)
     else
-      raise APIError.new(json_data['error'], res)
+      raise APIError.new(json_data['errors'], res)
     end
   end
 end
