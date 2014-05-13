@@ -100,6 +100,9 @@ class Rubytter
       list_following          /lists/subscribers
       follow_list             /lists/subscribers/create       post
       remove_list             /lists/subscribers/destroy      post
+      create_mute             /mutes/users/create             post
+      destroy_mute            /mutes/users/destroy            post
+      list_mute               /mutes/users/list
     ".strip.split("\n").map{|line| line.strip.split(/\s+/)}
   end
 
